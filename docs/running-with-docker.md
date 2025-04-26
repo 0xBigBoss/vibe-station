@@ -27,7 +27,10 @@ This guide provides step-by-step instructions to run the Vibe Station Coder work
     *   `-d`: Runs the containers in detached mode (in the background).
 
 3.  **Access Coder:** Once the container is running, you should be able to access the Coder dashboard.
-    *   [Placeholder: Add details on how to access the Coder UI - e.g., default URL like http://localhost:7080, any default login credentials if applicable.]
+    *   Open your browser and navigate to `http://localhost:7080`
+    *   If this is your first time, you'll need to create an admin user
+    *   Follow the on-screen instructions to complete the setup
+    *   Once logged in, you can create a new workspace using the Vibe Station template
 
 4.  **Stopping the Workspace:** To stop the running containers:
     ```bash

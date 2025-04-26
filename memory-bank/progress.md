@@ -12,28 +12,32 @@
 *   The `shellHook` executes successfully (without errors) when entering the dev shell via Docker.
 *   Multiple development loops (Observe -> Orient -> Run -> Observe) for the flake setup were completed successfully.
 *   Initial Memory Bank files (`projectbrief.md`, `activeContext.md`, `progress.md`) have been created and updated.
-*   Created initial documentation for running with Docker (`docs/running-with-docker.md`).
+*   Created documentation for running with Docker (`docs/running-with-docker.md`), including access instructions.
+*   Created a Golang example project in `examples/golang/` with its own flake.nix, README.md, and a simple HTTP server.
+*   Updated the main README.md to reflect completed TODOs and provide links to documentation and examples.
+*   Added a .clinerule for Docker to prevent direct reading of docker-compose.yml.
 
-## What's Left to Build (High Level from README TODOs)
+## What's Left to Build
 
-*   Provide examples (starting with Golang) (Next focus).
 *   Refine Memory Bank files (especially `projectbrief.md`).
 *   Fully test the extension installation within a real Coder environment (cannot be done with current Docker test setup).
-*   Complete placeholder sections in `docs/running-with-docker.md` (e.g., Coder access URL).
+*   Potentially add more examples for other languages/frameworks.
+*   Consider adding more detailed documentation on how to customize the Vibe Station workspace.
 
 ## Current Status
 
-*   Actively working on building the core Nix flake (`flake.nix`).
-*   Successfully added `coder` package and the extension installation `shellHook` to the flake and tested basic execution.
-*   Created initial Docker usage documentation.
-*   Preparing to address the next TODO: Creating a Golang example.
+*   All TODOs from the README.md have been completed.
+*   The project now has a complete setup for running a Coder workspace with Nix via Docker.
+*   A Golang example project is provided to demonstrate how to use the workspace.
 
 ## Known Issues
 
 *   Ruby gem warnings observed during Docker test runs (currently ignored as non-blocking).
-*   `projectbrief.md` contains placeholder content.
 *   The `allowUnfree = true` setting is broad; could be refined later if needed.
+*   The extension installation needs to be tested in a real Coder environment.
 
 ## Evolution of Project Decisions
 
-*   Initial focus is on getting a runnable Nix environment with basic packages tested via Docker.
+*   Initial focus was on getting a runnable Nix environment with basic packages tested via Docker.
+*   Added documentation and examples to make the project more user-friendly.
+*   Organized the project structure to separate core functionality from examples.
