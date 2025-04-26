@@ -2,12 +2,14 @@
 
 ## Core Goal
 
-*   [Placeholder: Define the primary objective of the vibe-station project.]
+A workspace for vibe coding. It leverages Nix to quickly create a Coder environment
+pre-configured with an agentic developer, Cline.
 
 ## Scope
 
-*   [Placeholder: Outline the key features and boundaries of the project.]
+- A nix flake template for starting a Coder workspace.
 
 ## Success Metrics
 
-*   [Placeholder: How will we measure the success of this project?]
+- A way to run a Coder workspace within a Nix environment.
+- An example that includes an example golang project using it's own flake that leverages and a walkthrough of how to use the vibe-station Coder workspace to develop the golang project.
