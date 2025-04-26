@@ -1,0 +1,12 @@
+services:
+  vibe-station:
+    platform: linux/amd64
+    build: .
+    stop_grace_period: 0s
+    command: sleep infinity
+    volumes:
+      - .:/app
+      - vibe-station-data:/nix/store
+
+volumes:
+  vibe-station-data:

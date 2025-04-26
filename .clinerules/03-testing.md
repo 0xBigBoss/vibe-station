@@ -24,3 +24,9 @@ docker compose exec vibe-station nix-shell \
   --run "cowsay hello | lolcat"
 ```
 
+Sometimes the nix image gets updated and we need reset the volume to repair the /nix/store.
+
+```bash
+docker compose down -v
+docker compose up --build -d vibe-station
+```
