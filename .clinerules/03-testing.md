@@ -4,19 +4,23 @@ Assume we are on MacOS and have docker installed for now.
 
 Be sure the nix code we are writing works by testing it in docker containers.
 
-For example, to use nixos containers to run tests you'll likely need to use a command like
-this:
+The project is using docker compose to speed up the process and cache the nix store
+in a volume. Be sure it is running before running the tests.
+
+For example, to use nixos containers to run tests, start the vibe-station-test container
+with the following command:
 
 ```bash
-# when running amd64, need to pass filter-syscalls=false
-docker run --platform=linux/amd64 \
-  -it \
-  --rm \
-  -v $PWD:/app \
-  -w /app \
-  nixos/nix \
-  nix-shell  --extra-experimental-features "nix-command flakes" \
-    --option filter-syscalls false \
-    -p cowsay lolcat --run "cowsay hello | lolcat"
+docker compose up --build -d vibe-station
+```
+
+Then, run the tests with the following command:
+
+```bash
+docker compose exec vibe-station nix-shell \
+  --extra-experimental-features "nix-command flakes" \
+  --option filter-syscalls false \
+  -p cowsay lolcat \
+  --run "cowsay hello | lolcat"
 ```
 
