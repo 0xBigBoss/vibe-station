@@ -1,37 +1,82 @@
 # Vibe Station
 
-A workspace for vibe coding. It leverages Nix to quickly create a Coder environment
+A Nix flake template for vibe coding. It leverages Nix to quickly create a Coder environment
 pre-configured with an agentic developer, Cline.
-
-It assumes that you already have Nix installed and configured with support for
-the experimental nix command and flakes features.
 
 ## Features
 
+- Nix flake template for easy integration with home-manager or standalone use
 - Docker-based setup for easy deployment
-- Nix flake that includes Coder pre-installed
-- Pre-installation of Cline extension (`saoudrizwan.claude-dev`)
-- Example projects to demonstrate usage
+- code-server pre-installed with Cline extension (`saoudrizwan.claude-dev`)
+- Works with any project without requiring tight VCS integration
 
-## Getting Started
+## Usage Options
 
-See [Running with Docker](docs/running-with-docker.md) for step-by-step instructions on how to run the Vibe Station Coder workspace on your machine.
+### Option 1: Use as a Flake Template
+
+```bash
+# Create a new project using the template
+mkdir my-vibe-station
+cd my-vibe-station
+nix flake init -t github:username/vibe-station
+```
+
+### Option 2: Include in Home Manager
+
+```nix
+# In your home-manager configuration
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    home-manager.url = "github:nix-community/home-manager";
+    vibe-station.url = "github:username/vibe-station";
+  };
+
+  outputs = { nixpkgs, home-manager, vibe-station, ... }: {
+    homeConfigurations."yourusername" = home-manager.lib.homeManagerConfiguration {
+      # ...
+      modules = [
+        {
+          # Add vibe-station to your packages
+          home.packages = [ vibe-station.packages.${system}.code-server ];
+          # Or use it in your shell configuration
+          programs.bash.initExtra = ''
+            # Add vibe-station shell hook
+            if [ -f ${vibe-station}/bin/vibe-station-hook ]; then
+              source ${vibe-station}/bin/vibe-station-hook
+            fi
+          '';
+        }
+      ];
+    };
+  };
+}
+```
+
+### Option 3: Clone and Use Directly
+
+```bash
+# Clone the repository
+git clone https://github.com/username/vibe-station.git
+cd vibe-station
+
+# Enter the development shell
+nix develop
+
+# Start code-server
+code-server
+```
+
+For detailed instructions on running with Docker, see [Running with Docker](docs/running-with-docker.md).
+
+Note: This project uses code-server (https://github.com/coder/code-server), which is VS Code running on a remote server and accessible through the browser.
 
 ## Examples
 
 - [Golang Example](examples/golang/README.md) - A simple Go HTTP server example that demonstrates how to use Vibe Station with a Go project.
 
-## TODO
-
-- [x] Need step-by-step instructions for a user to run the Vibe Station coder workspace on their machine using docker
-- [x] Create a nix flake that includes Coder pre-installed
-- [x] Pre-install Cline extension `saoudrizwan.claude-dev`
-- [x] Examples of using the Vibe Station Coder workspace
-  - [x] Golang project only for now.
-
 ## Notes
 
-- Focus on linux/amd64 for now so we can prove the concept since linux amd64 is the most
-widely supported platform development.
-- The examples let users bring their own nix flakes so that the coder workspace can be used for any project.
+- Focus on linux/amd64 for now since it's the most widely supported platform for development.
+- The flake template approach allows you to use Vibe Station with any project without requiring tight VCS integration.
 - Use the memory bank to save progress.

@@ -2,41 +2,43 @@
 
 ## Current Focus
 
-*   Completed all TODOs from the README.md.
-*   Created a Golang example project to demonstrate using the Vibe Station workspace.
-*   Updated documentation and Memory Bank files to reflect current progress.
+*   Implemented a flake template approach for Vibe Station that can be used in multiple ways without requiring tight VCS integration.
+*   Focused on three usage options: as a flake template, included in home manager, or cloned and used directly.
+*   Updated documentation to reflect the new approach.
 
 ## Recent Changes
 
-*   Completed the Docker instructions in `docs/running-with-docker.md`, filling in the placeholder for accessing Coder.
-*   Created a Golang example project in `examples/golang/` with:
-    *   A simple HTTP server in `main.go`
-    *   A Go module definition in `go.mod`
-    *   A Nix flake in `flake.nix` that sets up a Go development environment
-    *   A README.md with instructions on how to use the example
-*   Updated the main README.md to reflect completed TODOs and provide links to documentation and examples.
-*   Updated `memory-bank/progress.md` to reflect current progress.
-*   Added a .clinerule for Docker to prevent direct reading of docker-compose.yml.
+*   Updated `flake.nix` to:
+    *   Focus on being a template that can be used in multiple ways
+    *   Add a templates.default section for use with nix flake init
+    *   Maintain the core functionality of providing a code-server environment with Cline
+*   Updated all references from `coder` binary to `code-server` binary throughout the project
+*   Created new documentation in `docs/standalone-installation.md` with detailed instructions for the standalone installation.
+*   Updated `docs/running-with-docker.md` to reference the new approach while maintaining Docker support.
+*   Updated the main README.md to focus on the three usage options.
+*   Maintained backward compatibility with the original Docker-based approach for users who prefer it.
 
 ## Next Steps
 
-1.  Consider adding more examples for other languages/frameworks.
-2.  Refine Memory Bank files, especially `projectbrief.md`.
-3.  Fully test the extension installation within a real Coder environment.
-4.  Consider adding more detailed documentation on how to customize the Vibe Station workspace.
+1.  Test the flake template approach on different platforms.
+2.  Consider adding more examples for other languages/frameworks.
+3.  Enhance the customization options in the flake.nix file.
+4.  Consider adding more documentation on how to use Vibe Station with specific project types.
+5.  Explore integration with other Nix-based tools and workflows.
 
 ## Active Decisions & Considerations
 
-*   Focusing on `linux/amd64` platform for initial setup as per `README.md` notes.
-*   Using Docker with `nixos/nix` image for testing the Nix environment, following `.clinerules/03-testing.md`.
-*   Ignoring Ruby gem warnings for now as they didn't impede the test.
-*   Set `allowUnfree = true` globally within the flake for simplicity, as Coder requires it.
-*   Created a separate flake.nix for the Golang example to demonstrate how users can bring their own Nix flakes.
+*   Adopted a simpler approach focusing on the Nix flake template that can be easily cloned or included in home-manager.
+*   Maintained the Docker-based approach for containerization as an alternative option.
+*   Kept the focus on `linux/amd64` platform for initial setup.
+*   Designed the flake to be easily customizable by modifying the buildInputs and shellHook.
+*   Focused on users directly using the `code-server` binary rather than creating a custom CLI tool.
+*   Maintained backward compatibility with the original approach for users who prefer it.
 
 ## Learnings & Insights
 
-*   The basic Nix flake structure and Docker testing command are functional.
-*   Memory Bank file creation is proceeding alongside development tasks.
-*   Dependencies (like Terraform for Coder) can introduce license constraints that need explicit handling in Nix flakes.
-*   The `shellHook` in `flake.nix` is a viable place to trigger Coder-specific setup commands like extension installation, although testing the actual installation requires a full Coder environment.
-*   Organizing examples in a separate directory with their own flake.nix files makes it easier for users to understand how to use the Vibe Station workspace with their own projects.
+*   The flake template approach provides a cleaner separation between the development environment and project code.
+*   Using Nix flakes allows for reproducible development environments across different machines.
+*   The home-manager integration pattern is more aligned with how users expect development tools to work.
+*   Maintaining backward compatibility ensures that existing users can continue to use the tool as they're accustomed to.
+*   Simplifying the approach to focus on being a template makes it easier for users to understand and use.

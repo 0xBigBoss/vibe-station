@@ -1,6 +1,6 @@
 # Golang Example for Vibe Station
 
-This is a simple Golang example project that demonstrates how to use the Vibe Station Coder workspace with a Go project.
+This is a simple Golang example project that demonstrates how to use the Vibe Station code-server workspace with a Go project.
 
 ## Project Structure
 
@@ -10,8 +10,8 @@ This is a simple Golang example project that demonstrates how to use the Vibe St
 
 ## Using with Vibe Station
 
-1. Start your Vibe Station Coder workspace following the instructions in the main project README.md
-2. Create a new workspace in Coder using this example
+1. Start your Vibe Station code-server workspace following the instructions in the main project README.md
+2. Create a new workspace in code-server using this example
 3. Open the workspace in VS Code
 4. The workspace will automatically have all the necessary Go tools installed
 5. Run the server with `go run main.go`
@@ -25,7 +25,7 @@ The `flake.nix` file defines a development environment with:
 - gopls (Go language server)
 - Various Go development tools (outline, code, pkgs, def, lint)
 
-When you enter the development shell (which happens automatically in the Coder workspace), you'll have access to all these tools.
+When you enter the development shell (which happens automatically in the code-server workspace), you'll have access to all these tools.
 
 ## Testing the Example
 
