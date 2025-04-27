@@ -1,7 +1,11 @@
 # Vibe Station
 
-A Nix flake template for vibe coding. It leverages Nix to quickly create a Coder environment
-pre-configured with an agentic developer, Cline.
+A project for quickly scaffolding a vibe coding station. It leverages Nix &
+Docker to quickly create a Code Server environment pre-configured with an
+agentic developer, Cline.
+
+This is an experimental project for quickly prototyping an agentic developer
+experience for vibe coding.
 
 ## Features
 

@@ -1,11 +1,12 @@
 services:
-  vibe-station:
+  code-server:
     platform: linux/amd64
     build: .
     stop_grace_period: 0s
-    command: sleep infinity
+    working_dir: /app
+    command: nix develop --command code-server --bind-addr 0.0.0.0:7080 --auth none
     ports:
-      - "7080:7080"
+      - "7080"
     volumes:
       - .:/app
       - vibe-station-data:/nix/store

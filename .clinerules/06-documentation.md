@@ -1,6 +1,9 @@
 # Documentation
 
-Documentation is a critical component of software development. Use a root `/docs` folder to store all documentation files. Keep it well organized, structured, and easy to navigate. Assume it could be published using a static site generator.
+Documentation is a critical component of software development.
+Use a root `/docs` folder to store all documentation files.
+Keep it well organized, structured, and easy to navigate.
+Assume it could be published using a static site generator.
 
 ## Grooming, Refining, and Updating
 

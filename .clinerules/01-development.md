@@ -24,10 +24,11 @@ Orient the code to the desired state. Write the code and tests to achieve the de
 
 Run the code. Executing the process and tests.
 
-### Observe
+### Reflect
 
-Observe the results of the code. Did the code achieve the desired state? Did it fail?
+Reflect on the results of the code. Did the code achieve the desired state? Did it fail?
 
 ### Repeat
 
-Repeat the process until the desired state is achieved. Avoid getting stuck in a loop. If progress is blocked or there is uncertainty, explain the problem and ask for clarification.
+Repeat the process until the desired state is achieved. Avoid getting stuck in a loop.
+If progress is blocked or there is uncertainty, explain the problem and ask for clarification.

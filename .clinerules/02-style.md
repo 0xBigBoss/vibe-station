@@ -10,4 +10,6 @@ Assume the style is enforced by a linter and formatter.
 
 ## Comments
 
-Focus comments solely on explaining the code's functionality and design choices, not the history of how the code was changed during our session. Ensure final code does not contain comments related to the debugging steps or conversational edits.
+Focus comments solely on explaining the code's functionality and design choices,
+not the history of how the code was changed during our session.
+Ensure final code does not contain comments related to the debugging steps or conversational edits.
