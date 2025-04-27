@@ -2,6 +2,12 @@
 
 The development process should be agile and iterative and focus on very tight feedback loops.
 
+Keep the context in mind. The context is the current state of the code, the desired state, and the results.
+
+Focus on keeping it simple and small. When the context grows, suggest summarizing the context and starting a new iteration.
+
+A new iteration would be a new conversation or thread between the agent and the developer.
+
 ## Loop
 
 A loop focuses on observing the current state, orienting the code to the desired state, running the code, and observing the results.
