@@ -18,8 +18,6 @@ Then, run the tests with the following command:
 
 ```bash
 docker compose exec vibe-station nix-shell \
-  --extra-experimental-features "nix-command flakes" \
-  --option filter-syscalls false \
   -p cowsay lolcat \
   --run "cowsay hello | lolcat"
 ```

@@ -5,6 +5,8 @@
 *   Implemented a flake template approach for Vibe Station that can be used in multiple ways without requiring tight VCS integration.
 *   Focused on three usage options: as a flake template, included in home manager, or cloned and used directly.
 *   Updated documentation to reflect the new approach.
+*   Successfully completed an end-to-end test using the Golang example with Docker.
+*   Planning to test the code-server functionality through the browser interface.
 
 ## Recent Changes
 
@@ -17,14 +19,25 @@
 *   Updated `docs/running-with-docker.md` to reference the new approach while maintaining Docker support.
 *   Updated the main README.md to focus on the three usage options.
 *   Maintained backward compatibility with the original Docker-based approach for users who prefer it.
+*   Completed an end-to-end test of the Golang example using Docker:
+    *   Successfully built and started the Docker container
+    *   Ran the Go HTTP server inside the container using nix-shell
+    *   Verified the server response using curl
+    *   Confirmed the entire workflow functions correctly
 
 ## Next Steps
 
-1.  Test the flake template approach on different platforms.
-2.  Consider adding more examples for other languages/frameworks.
-3.  Enhance the customization options in the flake.nix file.
-4.  Consider adding more documentation on how to use Vibe Station with specific project types.
-5.  Explore integration with other Nix-based tools and workflows.
+1.  Test the code-server functionality through the browser interface:
+    *   Start the Docker container with code-server
+    *   Access code-server through the browser
+    *   Open the Golang example project
+    *   Run the Go HTTP server from within code-server
+    *   Verify the server response
+2.  Test the flake template approach on different platforms.
+3.  Consider adding more examples for other languages/frameworks.
+4.  Enhance the customization options in the flake.nix file.
+5.  Consider adding more documentation on how to use Vibe Station with specific project types.
+6.  Explore integration with other Nix-based tools and workflows.
 
 ## Active Decisions & Considerations
 

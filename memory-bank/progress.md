@@ -21,15 +21,26 @@
 *   Created detailed documentation for the standalone installation process with three usage options.
 *   Updated existing documentation to reference the new approach while maintaining Docker support.
 *   Maintained backward compatibility with the original approach.
+*   Successfully completed an end-to-end test of the Golang example using Docker:
+    *   Built and started the Docker container with `docker compose up --build -d vibe-station`
+    *   Ran the Go HTTP server inside the container using nix-shell with appropriate parameters
+    *   Verified the server response using curl, confirming it returns "Hello from Vibe Station Golang Example!"
+    *   Cleaned up resources by stopping the Docker container with `docker compose down`
 
 ## What's Left to Build
 
+*   Test the code-server functionality through the browser interface:
+    *   Start the Docker container with code-server
+    *   Access code-server through the browser
+    *   Open the Golang example project
+    *   Run the Go HTTP server from within code-server
+    *   Verify the server response
 *   Test the flake template approach on different platforms.
 *   Enhance the customization options in the flake.nix file.
 *   Consider adding more documentation on how to use Vibe Station with specific project types.
 *   Explore integration with other Nix-based tools and workflows.
 *   Potentially add more examples for other languages/frameworks.
-*   Fully test the extension installation within a real code-server environment (cannot be done with current Docker test setup).
+*   Fully test the extension installation within a real code-server environment.
 
 ## Current Status
 
