@@ -32,6 +32,9 @@
             if ! code-server --list-extensions | grep saoudrizwan.claude-dev &> /dev/null ; then
               code-server --install-extension saoudrizwan.claude-dev || echo "Failed to install extension (might not be in code-server env)."
             fi
+            if ! code-server --list-extensions | grep  RooVeterinaryInc.roo-cline &> /dev/null ; then
+              code-server --install-extension RooVeterinaryInc.roo-cline || echo "Failed to install extension (might not be in code-server env)."
+            fi
           fi
         '';
       };

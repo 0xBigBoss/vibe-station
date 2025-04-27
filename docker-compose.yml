@@ -4,12 +4,13 @@ services:
     build: .
     stop_grace_period: 0s
     working_dir: /app
-    command: nix develop --command code-server --bind-addr 0.0.0.0:7080 --auth none
     ports:
       - "7080"
     volumes:
       - .:/app
-      - vibe-station-data:/nix/store
+      - nix-store-data:/nix/store
+      - coder-server-data:/root/.local/share/code-server
 
 volumes:
-  vibe-station-data:
+  nix-store-data:
+  coder-server-data:
