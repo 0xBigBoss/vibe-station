@@ -17,14 +17,6 @@
         devShells.default = pkgs.mkShell {
           buildInputs = [
             pkgs.go
-            pkgs.gopls
-            pkgs.gotools
-            pkgs.go-outline
-            pkgs.gocode
-            pkgs.gopkgs
-            pkgs.gocode-gomod
-            pkgs.godef
-            pkgs.golint
           ];
           shellHook = ''
             echo "Welcome to the Golang example project!"

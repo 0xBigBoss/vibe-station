@@ -6,7 +6,8 @@
 *   Focused on three usage options: as a flake template, included in home manager, or cloned and used directly.
 *   Updated documentation to reflect the new approach.
 *   Successfully completed an end-to-end test using the Golang example with Docker.
-*   Planning to test the code-server functionality through the browser interface.
+*   Successfully tested the code-server functionality through the browser interface.
+*   Discovered and documented the use of the `folder` query parameter to directly open specific folders in code-server.
 
 ## Recent Changes
 
@@ -27,17 +28,11 @@
 
 ## Next Steps
 
-1.  Test the code-server functionality through the browser interface:
-    *   Start the Docker container with code-server
-    *   Access code-server through the browser
-    *   Open the Golang example project
-    *   Run the Go HTTP server from within code-server
-    *   Verify the server response
-2.  Test the flake template approach on different platforms.
-3.  Consider adding more examples for other languages/frameworks.
-4.  Enhance the customization options in the flake.nix file.
-5.  Consider adding more documentation on how to use Vibe Station with specific project types.
-6.  Explore integration with other Nix-based tools and workflows.
+1.  Test the flake template approach on different platforms.
+2.  Consider adding more examples for other languages/frameworks.
+3.  Enhance the customization options in the flake.nix file.
+4.  Consider adding more documentation on how to use Vibe Station with specific project types.
+5.  Explore integration with other Nix-based tools and workflows.
 
 ## Active Decisions & Considerations
 
@@ -55,3 +50,4 @@
 *   The home-manager integration pattern is more aligned with how users expect development tools to work.
 *   Maintaining backward compatibility ensures that existing users can continue to use the tool as they're accustomed to.
 *   Simplifying the approach to focus on being a template makes it easier for users to understand and use.
+*   The code-server `folder` query parameter (e.g., `http://localhost:7080/?folder=/app/examples/golang`) provides a convenient way to directly open specific folders, improving the user experience.

@@ -11,11 +11,13 @@ This is a simple Golang example project that demonstrates how to use the Vibe St
 ## Using with Vibe Station
 
 1. Start your Vibe Station code-server workspace following the instructions in the main project README.md
-2. Create a new workspace in code-server using this example
-3. Open the workspace in VS Code
-4. The workspace will automatically have all the necessary Go tools installed
-5. Run the server with `go run main.go`
-6. Access the server at http://localhost:8080
+2. Open this example directly in code-server by using the folder query parameter:
+   ```
+   http://localhost:7080/?folder=/app/examples/golang
+   ```
+3. The workspace will automatically have all the necessary Go tools installed
+4. Run the server with `go run main.go`
+5. Access the server at http://localhost:8080
 
 ## Development Environment
 

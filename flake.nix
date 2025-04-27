@@ -29,10 +29,9 @@
           # Note: This command only works when run within a code-server workspace environment.
           # We add it here so the flake provides the necessary setup.
           if command -v code-server &> /dev/null; then
-            echo "Attempting to install saoudrizwan.claude-dev extension..."
-            # code-server --install-extension saoudrizwan.claude-dev || echo "Failed to install extension (might not be in code-server env)."
-          else
-            echo "code-server CLI not found, skipping extension install."
+            if ! code-server --list-extensions | grep saoudrizwan.claude-dev &> /dev/null ; then
+              code-server --install-extension saoudrizwan.claude-dev || echo "Failed to install extension (might not be in code-server env)."
+            fi
           fi
         '';
       };

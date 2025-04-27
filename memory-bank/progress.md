@@ -26,15 +26,17 @@
     *   Ran the Go HTTP server inside the container using nix-shell with appropriate parameters
     *   Verified the server response using curl, confirming it returns "Hello from Vibe Station Golang Example!"
     *   Cleaned up resources by stopping the Docker container with `docker compose down`
+*   Successfully tested the code-server functionality through the browser interface:
+    *   Started the Docker container with code-server
+    *   Accessed code-server through the browser
+    *   Discovered and documented the use of the `folder` query parameter to directly open specific folders:
+        ```
+        http://localhost:7080/?folder=/app/examples/golang
+        ```
+    *   Updated documentation in `docs/running-with-docker.md` and `examples/golang/README.md` to include this information
 
 ## What's Left to Build
 
-*   Test the code-server functionality through the browser interface:
-    *   Start the Docker container with code-server
-    *   Access code-server through the browser
-    *   Open the Golang example project
-    *   Run the Go HTTP server from within code-server
-    *   Verify the server response
 *   Test the flake template approach on different platforms.
 *   Enhance the customization options in the flake.nix file.
 *   Consider adding more documentation on how to use Vibe Station with specific project types.
@@ -51,6 +53,8 @@
     *   Clone and Use Directly: Clone the repository and use it with or without Docker
 *   A Golang example project is provided to demonstrate how to use the workspace.
 *   Comprehensive documentation is available for both approaches.
+*   Successfully tested the code-server functionality through the browser interface.
+*   Discovered and documented the use of the `folder` query parameter to directly open specific folders in code-server.
 
 ## Known Issues
 

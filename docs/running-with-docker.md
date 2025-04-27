@@ -31,6 +31,10 @@ This guide provides step-by-step instructions to run the Vibe Station code-serve
     *   If this is your first time, you'll need to create a password or authenticate
     *   Follow the on-screen instructions to complete the setup
     *   Once logged in, you can start using the VS Code interface in your browser
+    *   To open a specific folder directly, use the `folder` query parameter in the URL:
+        ```
+        http://localhost:7080/?folder=/app/examples/golang
+        ```
 
 4.  **Stopping the Workspace:** To stop the running containers:
     ```bash

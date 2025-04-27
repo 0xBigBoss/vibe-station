@@ -4,6 +4,8 @@ services:
     build: .
     stop_grace_period: 0s
     command: sleep infinity
+    ports:
+      - "7080:7080"
     volumes:
       - .:/app
       - vibe-station-data:/nix/store
