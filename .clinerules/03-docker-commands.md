@@ -1,8 +1,15 @@
-# Docker Commands
+# Docker
 
-When working with Docker in this project, follow these guidelines to maintain an efficient workflow and prevent context window overflow.
+When working with Docker in this project:
+
+- Use the Dockerfile and docker-compose.yml files in the root directory
+- Refer to docs/running-with-docker.md for instructions on how to use Docker with this project
+- **IMPORTANT**: Always follow the guidelines to prevent context window overflow
+- **NEVER** run Docker build or compose commands in the terminal without output redirection or quiet flags
 
 ## Docker Command Best Practices
+
+When working with Docker in this project, follow these guidelines to maintain an efficient workflow and prevent context window overflow.
 
 ### 1. ALWAYS Redirect Output for Build Commands
 
