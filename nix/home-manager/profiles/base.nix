@@ -68,14 +68,6 @@
 
     # --- Program Configurations ---
 
-    # Docker Configuration
-    # This ensures Docker uses the mounted volume for storing images
-    home.file.".docker/config.json".text = ''
-      {
-        "data-root": "/var/lib/docker"
-      }
-    '';
-
     # Zsh Configuration
     programs.zsh = {
       enable = true;

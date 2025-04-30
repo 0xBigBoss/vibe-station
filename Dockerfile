@@ -1,7 +1,8 @@
 FROM debian:bookworm
 
+# Install dependencies including Docker
 RUN apt update \
-  && apt install -y curl xz-utils sudo \
+  && apt install -y curl xz-utils sudo apt-transport-https ca-certificates gnupg lsb-release \
   && /sbin/useradd -m coder \
   && mkdir -p /home/coder/.local/share/code-server \
   && chown -R coder /home/coder \
@@ -12,6 +13,19 @@ RUN apt update \
   && mkdir -p /etc/sudoers.d \
   && echo "coder ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/coder \
   && chmod 440 /etc/sudoers.d/coder \
+  # Install Docker
+  && install -m 0755 -d /etc/apt/keyrings \
+  && curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
+  && chmod a+r /etc/apt/keyrings/docker.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
+  && apt update \
+  && apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
+  # Create Docker group and add coder user to it
+  && groupadd -f docker \
+  && usermod -aG docker coder \
+  && mkdir -p /etc/docker \
+  # Configure Docker daemon for DinD
+  && echo '{ "storage-driver": "vfs" }' > /etc/docker/daemon.json \
   && apt clean
 
 USER coder
@@ -36,5 +50,9 @@ WORKDIR /app
 # Expose port 7080 for code-server
 EXPOSE 7080
 
-# Start the code-server container
-CMD ["code-server", "--bind-addr", "0.0.0.0:7080", "--auth", "none"]
+# Create a wrapper script to start Docker and then code-server
+COPY --chown=coder:coder entrypoint.sh /home/coder/entrypoint.sh
+RUN sudo chmod +x /home/coder/entrypoint.sh
+
+# Start Docker daemon and then code-server
+ENTRYPOINT ["/home/coder/entrypoint.sh"]

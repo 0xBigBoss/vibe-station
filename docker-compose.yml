@@ -2,8 +2,9 @@ services:
   code-server:
     platform: linux/amd64
     build: .
-    stop_grace_period: 0s
+    stop_grace_period: 30s
     working_dir: /app
+    privileged: true
     ports:
       - "7080"
     volumes:
@@ -11,6 +12,20 @@ services:
       - nix-store-data:/nix/store
       - coder-server-data:/home/coder/.local/share/code-server
       - docker-images-data:/var/lib/docker
+      - type: tmpfs
+        target: /var/run
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "bash",
+          "-c",
+          "curl -f http://localhost:7080 || exit 1 && docker info || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 volumes:
   nix-store-data:
