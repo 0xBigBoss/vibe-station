@@ -20,7 +20,11 @@
     *   Switched to debian:bookworm as the base image
     *   Installed Nix in single-user mode for the non-root 'coder' user
     *   Added necessary configurations to enable flakes and other Nix features
-    *   Installed code-server and home-manager using nix-env
+    *   Installed code-server using nix-env (removed home-manager to avoid conflicts)
+*   Resolved conflict between imperative (`nix-env` in Dockerfile) and declarative (`programs.home-manager.enable = true;`) installation of `home-manager`:
+    *   Removed `home-manager` from `nix-env` installation in Dockerfile to avoid activation conflicts
+    *   Kept the declarative management in Home Manager configuration (`programs.home-manager.enable = true;` in home.nix)
+    *   Updated documentation to provide clear guidance on initial activation using `nix run github:nix-community/home-manager -- switch --flake .#coder` and subsequent activations using `home-manager switch --flake .#coder`
 *   Updated `flake.nix` to:
     *   Focus on being a template that can be used in multiple ways
     *   Add a templates.default section for use with nix flake init
@@ -53,11 +57,15 @@
     *   Added a new volume `docker-images-data` to persist Docker images between container restarts
     *   Updated the Docker configuration in the base profile to use the mounted volume for storing images
     *   Updated documentation to explain the volume caching system
+*   Updated documentation (`docs/running-with-docker.md`, `nix/home-manager/README.md`) and test script (`test-profiles.sh`) to reflect the removal of imperative `home-manager` installation and provide correct initial activation commands for Docker environment:
+    *   Added detailed instructions for initial activation using `nix run` since `home-manager` isn't in the initial PATH
+    *   Added instructions for subsequent activations using the standard `home-manager switch` command
+    *   Updated the test script to handle both initial and subsequent activations correctly
 
 ## Next Steps
 
-1.  Complete the testing of the overlayed profiles within the Docker environment by:
-    *   Running the full test script with appropriate modifications to avoid Docker-in-Docker issues
+1.  ✅ Complete the testing of the overlayed profiles within the Docker environment by:
+    *   ✅ Running the full test script with appropriate modifications to avoid Docker-in-Docker issues
     *   Testing the direnv integration with the project template
 2.  Update documentation to reflect the changes made to the `flake.nix` structure and the addition of `gnused` to the Dockerfile.
 3.  Test the flake template approach on different platforms.
@@ -67,6 +75,12 @@
 7.  Potentially add more examples for other languages/frameworks.
 8.  Fully test the extension installation within a real code-server environment.
 9.  Consider mounting the host's Docker socket as a future optimization to allow the container to use the host's Docker daemon instead of running Docker-in-Docker.
+10. Implement Docker and Home Manager enhancements as outlined in `docs/todo/docker-home-manager-enhancements.md`:
+    *   Patch the Debian container for passwordless sudo for the `coder` user
+    *   Add home manager switch step to the Dockerfile
+    *   Parameterize the `/app` directory using an ENV variable
+    *   Create a Home Manager option to configure `code-server` settings
+    *   Update documentation for these changes
 
 ## Active Decisions & Considerations
 
@@ -85,7 +99,11 @@
 *   Designed the project template to demonstrate how to integrate with the overlayed profiles.
 *   Fixed the structure of `homeConfigurations` in `nix/home-manager/flake.nix` to be a flat attrset with direct entries for each configuration, rather than a nested structure that was causing the test script to fail.
 *   Added `gnused` to the Dockerfile to ensure the `test-profiles.sh` script can run successfully in the Docker environment.
-*   Decided to optimize Docker-in-Docker performance by adding volume caching for Docker images while maintaining complete isolation of the container, rather than mounting the host's Docker socket which would have been faster but less isolated.
+    *   Decided to optimize Docker-in-Docker performance by adding volume caching for Docker images while maintaining complete isolation of the container, rather than mounting the host's Docker socket which would have been faster but less isolated.
+*   Decided to manage `home-manager` purely declaratively (`programs.home-manager.enable = true;`) and removed the imperative installation from the Dockerfile to resolve activation conflicts:
+    *   This approach ensures a consistent and reliable Home Manager setup
+    *   Avoids the conflicts that arise when the same package is managed both imperatively and declaratively
+    *   Provides a cleaner separation of concerns in the configuration
 
 ## Learnings & Insights
 
@@ -111,3 +129,9 @@
     *   Reduced disk space usage by avoiding duplicate image storage
     *   Improved testing efficiency when running tests that require Docker
     *   Maintaining container isolation while still optimizing performance
+*   Installing `home-manager` both imperatively (e.g., `nix-env` in Dockerfile) and declaratively (`programs.home-manager.enable = true;`) causes conflicts during `home-manager switch`. The solution is to rely solely on declarative management and use `nix run` for the initial activation if the command isn't in the PATH:
+    *   When `home-manager` is installed both ways, the imperative installation can interfere with the declarative management
+    *   Using `nix run github:nix-community/home-manager -- switch --flake .#coder` for initial activation avoids this conflict
+    *   After the first successful activation, `home-manager` is available in the PATH through the declarative configuration
+    *   This approach ensures a consistent and reliable Home Manager setup across different environments
+*   When writing scripts that use `home-manager` commands, it's important to use `nix run github:nix-community/home-manager` instead of directly calling `home-manager` for initial validation or activation. This ensures the script works correctly even when the `home-manager` command isn't yet available in the PATH, which is the case before the first successful activation.

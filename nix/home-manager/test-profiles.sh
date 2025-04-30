@@ -76,7 +76,7 @@ test_home_manager_build() {
   print_step "Validating Home Manager configuration syntax..."
 
   # Test building the configuration (syntax check)
-  if docker compose exec code-server bash -c "cd /app/nix/home-manager && home-manager build --flake .#$USERNAME --no-out-link"; then
+  if docker compose exec code-server bash -c "cd /app/nix/home-manager && nix run github:nix-community/home-manager -- build --flake .#$USERNAME --no-out-link"; then
     echo -e "${GREEN}✓ Home Manager configuration syntax is valid${RESET}"
   else
     print_error "Home Manager configuration has syntax errors"
@@ -158,8 +158,11 @@ echo
 echo -e "${BOLD}Next Steps:${RESET}"
 echo "1. Review any warnings or errors in the test output"
 echo "2. Customize your configuration in home.nix and profiles/*.nix"
-echo "3. For a full test, apply the configuration on your actual system with:"
-echo "   cd nix/home-manager && nix run home-manager/master -- switch --flake .#coder"
+echo "3. For a full test within the Docker container, apply the configuration:"
+echo "   - Initial Activation (home-manager command isn't available yet):"
+echo "     docker compose exec code-server bash -c \"cd /app/nix/home-manager && nix run github:nix-community/home-manager -- switch --flake .#coder\""
+echo "   - Subsequent Activations (after first activation):"
+echo "     docker compose exec code-server bash -c \"cd /app/nix/home-manager && home-manager switch --flake .#coder\""
 echo
 
 cleanup

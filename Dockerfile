@@ -23,7 +23,7 @@ RUN echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf && \
 USER coder
 
 # Install required packages
-RUN nix-env -iA nixpkgs.code-server nixpkgs.home-manager
+RUN nix-env -iA nixpkgs.code-server
 
 # Expose port 7080 for code-server
 EXPOSE 7080

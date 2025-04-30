@@ -1,7 +1,10 @@
 # Personal profile: User-specific configurations and preferences
-{ config, pkgs, lib, ... }:
-
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
   # --- Personal Git Configuration ---
   # !! IMPORTANT: Customize these values !!
   programs.git = {
@@ -31,19 +34,19 @@
       # update-system = "sudo nixos-rebuild switch --flake /etc/nixos#yourhostname";
     };
     # Add environment variables or custom init commands
-    initExtra = ''
-      # Example: Add personal bin directory to PATH
-      # export PATH="$HOME/.local/bin:$PATH"
+    # initExtra = ''
+    #   # Example: Add personal bin directory to PATH
+    #   # export PATH="$HOME/.local/bin:$PATH"
 
-      # Add any other personal shell startup commands here
-      # Maybe load a custom theme or plugins if not using a framework managed by HM
-    '';
+    #   # Add any other personal shell startup commands here
+    #   # Maybe load a custom theme or plugins if not using a framework managed by HM
+    # '';
     # If using Oh My Zsh managed by Home Manager:
-    # oh-my-zsh = {
-    #   enable = true;
-    #   plugins = [ "git" "docker" ]; # Add desired plugins
-    #   theme = "robbyrussell"; # Set desired theme
-    # };
+    oh-my-zsh = {
+      enable = true;
+      plugins = ["git" "docker"]; # Add desired plugins
+      theme = "ys"; # Set desired theme
+    };
   };
 
   # --- Other Personal Program Configurations ---

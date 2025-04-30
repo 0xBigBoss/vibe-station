@@ -35,6 +35,7 @@
     tree # Directory listing tool
     unzip
     gnused # GNU sed implementation
+    vim
     # cowsay # Fun utility (for testing)
     # lolcat # Rainbow output (for testing)
 

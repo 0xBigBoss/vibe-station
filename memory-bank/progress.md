@@ -47,11 +47,17 @@
     *   Added a new volume `docker-images-data` to persist Docker images between container restarts
     *   Updated the Docker configuration in the base profile to use the mounted volume for storing images
     *   Updated documentation to explain the volume caching system
+*   Resolved the conflict between imperative and declarative installation of `home-manager`:
+    *   Removed `home-manager` from `nix-env` installation in Dockerfile
+    *   Kept the declarative management in Home Manager configuration (`programs.home-manager.enable = true;`)
+    *   Updated documentation to provide clear guidance on initial and subsequent Home Manager configuration activations
+    *   Updated the test script to handle both initial and subsequent activations correctly
+*   Fixed the test script (`test-profiles.sh`) to use `nix run github:nix-community/home-manager` for initial validation instead of directly calling `home-manager`, resolving the issue with the command not being available initially.
 
 ## What's Left to Build
 
-*   Complete the testing of the overlayed profiles within the Docker environment by:
-    *   Running the full test script with appropriate modifications to avoid Docker-in-Docker issues
+*   ✅ Complete the testing of the overlayed profiles within the Docker environment by:
+    *   ✅ Running the full test script with appropriate modifications to avoid Docker-in-Docker issues
     *   Testing the direnv integration with the project template
 *   Update documentation to reflect the changes made to the `flake.nix` structure and the addition of `gnused` to the Dockerfile.
 *   Test the flake template approach on different platforms.
@@ -83,10 +89,16 @@
     *   Fixed the structure of `homeConfigurations` in `nix/home-manager/flake.nix` to be a flat attrset with direct entries for each configuration.
     *   Added `gnused` to the Dockerfile to ensure the `test-profiles.sh` script can run successfully.
     *   Successfully tested the Home Manager configuration build with the fixed `flake.nix` structure.
+    *   Updated the test script to use `nix run github:nix-community/home-manager` for initial validation instead of directly calling `home-manager`, resolving the issue with the command not being available initially.
 *   Optimized the Docker Compose setup for better performance:
     *   Added a new volume `docker-images-data` to persist Docker images between container restarts
     *   Updated the Docker configuration in the base profile to use the mounted volume for storing images
     *   Updated documentation to explain the volume caching system
+*   Implemented a clean approach to manage `home-manager` purely declaratively:
+    *   Removed `home-manager` from `nix-env` installation in Dockerfile
+    *   Kept the declarative management in Home Manager configuration (`programs.home-manager.enable = true;`)
+    *   Added instructions for initial activation using `nix run` and subsequent activations using `home-manager switch`
+    *   This approach ensures a consistent and reliable Home Manager setup across different environments
 
 ## Known Issues
 
@@ -95,7 +107,7 @@
 *   The extension installation needs to be tested in a real code-server environment.
 *   The flake template approach needs to be tested on different platforms.
 *   The overlayed profiles implementation needs to be fully tested in a real environment.
-*   The test script (`test-profiles.sh`) needs modifications to run successfully in the Docker environment without Docker-in-Docker issues.
+*   The initial activation of Home Manager requires using `nix run` since the `home-manager` command isn't in the PATH until the first successful activation.
 
 ## Evolution of Project Decisions
 

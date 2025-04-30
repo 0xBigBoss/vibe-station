@@ -47,12 +47,19 @@ This guide provides step-by-step instructions to run the Vibe Station code-serve
 *   This setup currently focuses on the `linux/amd64` architecture.
 *   The `flake.nix` file defines the development environment, including code-server and pre-installed tools.
 *   The `shellHook` in `flake.nix` attempts to automatically install the `saoudrizwan.claude-dev` VS Code extension when the code-server workspace starts.
-*   The Docker container includes a dedicated `coder` user for running Home Manager commands.
-*   The Home Manager configuration is set to use the `coder` user by default.
-*   When running Home Manager commands in the Docker container, use the `coder` user:
-    ```bash
-    docker compose exec code-server bash -c "su - coder -c 'cd /app/nix/home-manager && nix run home-manager/master -- switch --flake .#coder'"
-    ```
+*   The Docker container includes a dedicated `coder` user.
+*   The Home Manager configuration (`nix/home-manager/home.nix`) is set to use the `coder` user by default and manages the `home-manager` package itself declaratively (`programs.home-manager.enable = true;`). The `home-manager` package is *not* pre-installed in the Docker image via `nix-env` to avoid conflicts.
+*   **Activating Home Manager:**
+    *   **Initial Activation:** Since `home-manager` isn't in the initial PATH, the first activation requires using `nix run` to fetch and execute it:
+        ```bash
+        # Run from your host machine
+        docker compose exec code-server bash -c "cd /app/nix/home-manager && nix run github:nix-community/home-manager -- switch --flake .#coder"
+        ```
+    *   **Subsequent Activations:** After the first successful activation, the `home-manager` command will be available in the `coder` user's PATH, and you can use the standard command:
+        ```bash
+        # Run from your host machine
+        docker compose exec code-server bash -c "cd /app/nix/home-manager && home-manager switch --flake .#coder"
+        ```
 *   The Docker Compose setup includes several volumes for caching:
     *   `nix-store-data`: Caches the Nix store to speed up package installations
     *   `coder-server-data`: Persists code-server settings and extensions

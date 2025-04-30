@@ -188,14 +188,19 @@ docker compose exec code-server bash -c "cd /app/nix/home-manager && home-manage
 docker compose exec code-server bash -c "nix-shell -p cowsay --run \"cowsay Testing packages from profiles\""
 
 # Apply the configuration (full test)
-docker compose exec code-server bash -c "cd /app/nix/home-manager && nix run home-manager/master -- switch --flake .#coder"
+# Initial Activation (if home-manager command isn't available yet):
+docker compose exec code-server bash -c "su - coder -c 'cd /app/nix/home-manager && nix run github:nix-community/home-manager -- switch --flake .#coder'"
+
+# Subsequent Activations (after the first successful run):
+docker compose exec code-server bash -c "su - coder -c 'cd /app/nix/home-manager && home-manager switch --flake .#coder'"
 ```
 
 **Important Notes on Docker Testing:**
-- Docker testing primarily validates syntax and package availability
-- The Docker container includes a dedicated `coder` user for running Home Manager commands
-- The Home Manager configuration is set to use the `coder` user by default
-- The Docker container environment is ephemeral and may differ from your actual system
+- Docker testing primarily validates syntax and package availability.
+- The Docker container includes a dedicated `coder` user.
+- The Home Manager configuration (`home.nix`) uses the `coder` user by default and manages the `home-manager` package itself declaratively (`programs.home-manager.enable = true;`). The `home-manager` package is *not* pre-installed in the Docker image via `nix-env` to avoid conflicts.
+- The initial activation requires `nix run` because the `home-manager` command isn't in the PATH until the first successful switch.
+- The Docker container environment is ephemeral and may differ from your actual system.
 
 ## Customization
 
