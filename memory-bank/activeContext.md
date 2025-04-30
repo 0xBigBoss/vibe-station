@@ -2,155 +2,69 @@
 
 ## Current Focus
 
-*   Implemented a flake template approach for Vibe Station that can be used in multiple ways without requiring tight VCS integration.
-*   Focused on three usage options: as a flake template, included in home manager, or cloned and used directly.
-*   Updated documentation to reflect the new approach.
-*   Successfully completed an end-to-end test using the Golang example with Docker.
-*   Successfully tested the code-server functionality through the browser interface.
-*   Discovered and documented the use of the `folder` query parameter to directly open specific folders in code-server.
-*   Implemented overlayed profiles in Nix Home Manager to provide a layered approach to managing development environments.
-*   Created a comprehensive testing script for validating the Home Manager configuration.
-*   Developed a project template to demonstrate integration with the overlayed profiles.
-*   Fixed an issue with the `homeConfigurations` structure in `nix/home-manager/flake.nix` that was causing the test script to fail.
-*   Optimized the Docker Compose setup to cache Docker-in-Docker images for better performance and resource efficiency.
+* Removed the top-level flake and focused exclusively on the Docker approach with home-manager
+* Updated all documentation to reflect the Docker-only approach
+* Maintained project-specific flakes in examples and templates for layering environments
+* Optimized the Docker Compose setup to cache Docker-in-Docker images for better performance
+* Successfully tested the code-server functionality through the browser interface
+* Implemented overlayed profiles in Nix Home Manager to provide a layered approach to managing development environments
 
 ## Recent Changes
 
-*   Changed the Docker base image from nixos/nix to Debian with single-user Nix installation:
-    *   Switched to debian:bookworm as the base image
-    *   Installed Nix in single-user mode for the non-root 'coder' user
-    *   Added necessary configurations to enable flakes and other Nix features
-    *   Installed code-server using nix-env (removed home-manager to avoid conflicts)
-    *   Configured passwordless sudo for the coder user via `/etc/sudoers.d/coder`
-*   Updated testing instructions to manage command output:
-    *   Added guidance on redirecting verbose output to log files
-    *   Added instructions for using quiet flags when available
-    *   Added examples of filtering output with grep
-    *   Updated documentation in both .clinerules/03-testing.md and docs/running-with-docker.md
-*   Resolved conflict between imperative (`nix-env` in Dockerfile) and declarative (`programs.home-manager.enable = true;`) installation of `home-manager`:
-    *   Removed `home-manager` from `nix-env` installation in Dockerfile to avoid activation conflicts
-    *   Kept the declarative management in Home Manager configuration (`programs.home-manager.enable = true;` in home.nix)
-    *   Updated documentation to provide clear guidance on initial activation using `nix run github:nix-community/home-manager -- switch --flake .#coder` and subsequent activations using `home-manager switch --flake .#coder`
-*   Updated `flake.nix` to:
-    *   Focus on being a template that can be used in multiple ways
-    *   Add a templates.default section for use with nix flake init
-    *   Maintain the core functionality of providing a code-server environment with Cline
-    *   Add home-manager as an input
-    *   Export Home Manager modules for use in other flakes
-    *   Add a project template for integration with overlayed profiles
-*   Updated all references from `coder` binary to `code-server` binary throughout the project
-*   Created new documentation in `docs/standalone-installation.md` with detailed instructions for the standalone installation.
-*   Updated `docs/running-with-docker.md` to reference the new approach while maintaining Docker support.
-*   Updated the main README.md to focus on the three usage options.
-*   Maintained backward compatibility with the original Docker-based approach for users who prefer it.
-*   Completed an end-to-end test of the Golang example using Docker:
-    *   Successfully built and started the Docker container
-    *   Ran the Go HTTP server inside the container using nix-shell
-    *   Verified the server response using curl
-    *   Confirmed the entire workflow functions correctly
-*   Created a new subdirectory (`nix/home-manager`) with the necessary Nix files:
-    *   `flake.nix`: Manages inputs and defines outputs
-    *   `home.nix`: Main configuration file that imports profiles
-    *   `profiles/base.nix`: Essential tools and configurations
-    *   `profiles/personal.nix`: User-specific settings and preferences
-*   Created a comprehensive README.md file in the `nix/home-manager` directory explaining the overlayed profiles and how to use them.
-*   Added a testing script (`test-profiles.sh`) to validate the Home Manager configuration.
-*   Created a project template to demonstrate integration with the overlayed profiles.
-*   Fixed the structure of `homeConfigurations` in `nix/home-manager/flake.nix` to be a flat attrset with direct entries for each configuration, rather than a nested structure that was causing the test script to fail.
-*   Added `gnused` to the Dockerfile to fix an issue with the `test-profiles.sh` script that was failing because `sed` was missing from the Docker environment.
-*   Successfully tested the Home Manager configuration build with the fixed `flake.nix` structure.
-*   Optimized the Docker Compose setup to cache Docker-in-Docker images:
-    *   Added a new volume `docker-images-data` to persist Docker images between container restarts
-    *   Updated the Docker configuration in the base profile to use the mounted volume for storing images
-    *   Updated documentation to explain the volume caching system
-*   Updated documentation (`docs/running-with-docker.md`, `nix/home-manager/README.md`) and test script (`test-profiles.sh`) to reflect the removal of imperative `home-manager` installation and provide correct initial activation commands for Docker environment:
-    *   Added detailed instructions for initial activation using `nix run` since `home-manager` isn't in the initial PATH
-    *   Added instructions for subsequent activations using the standard `home-manager switch` command
-    *   Updated the test script to handle both initial and subsequent activations correctly
+* Removed top-level flake.nix and flake.lock files
+* Removed standalone-installation.md documentation
+* Updated README.md to focus solely on the Docker approach
+* Updated docs/running-with-docker.md to position it as the primary/only installation method
+* Updated examples/golang/README.md to remove references to the top-level flake
+* Updated nix/home-manager/README.md to focus on Docker usage
+* Kept project-specific flakes in examples and templates to demonstrate environment layering
+* Changed the Docker base image from nixos/nix to Debian with single-user Nix installation:
+  * Switched to debian:bookworm as the base image
+  * Installed Nix in single-user mode for the non-root 'coder' user
+  * Added necessary configurations to enable flakes and other Nix features
+  * Configured passwordless sudo for the coder user via `/etc/sudoers.d/coder`
+* Resolved conflict between imperative and declarative installation of `home-manager`:
+  * Removed `home-manager` from `nix-env` installation in Dockerfile to avoid activation conflicts
+  * Kept the declarative management in Home Manager configuration (`programs.home-manager.enable = true;` in home.nix)
+  * Updated documentation to provide clear guidance on initial activation using `nix run github:nix-community/home-manager -- switch --flake .#coder` and subsequent activations using `home-manager switch --flake .#coder`
+* Added Docker-in-Docker support with volume caching:
+  * Added a new volume `docker-images-data` to persist Docker images between container restarts
+  * Updated the Docker configuration in the base profile to use the mounted volume for storing images
+  * Updated documentation to explain the volume caching system
 
 ## Next Steps
 
-1.  ✅ Complete the testing of the overlayed profiles within the Docker environment by:
-    *   ✅ Running the full test script with appropriate modifications to avoid Docker-in-Docker issues
-    *   Testing the direnv integration with the project template
-2.  ✅ Complete Docker and Home Manager Enhancements:
-    *   ✅ Task 1: Passwordless sudo for coder user - Verified working with `sudo -n id` command
-    *   ✅ Task 2: Home Manager switch in Dockerfile - Completed and tested successfully
-    *   Task 3: Parameterize App Directory
-    *   Task 4: Code-Server Settings Configuration
-    *   Task 5: Documentation Updates
-3.  Update documentation to reflect the changes made to the `flake.nix` structure and the addition of `gnused` to the Dockerfile.
-3.  Test the flake template approach on different platforms.
-4.  Enhance the customization options in the flake.nix file.
-5.  Consider adding more documentation on how to use Vibe Station with specific project types.
-6.  Explore integration with other Nix-based tools and workflows.
-7.  Potentially add more examples for other languages/frameworks.
-8.  Fully test the extension installation within a real code-server environment.
-9.  Consider mounting the host's Docker socket as a future optimization to allow the container to use the host's Docker daemon instead of running Docker-in-Docker.
-10. Continue implementing Docker and Home Manager enhancements as outlined in `docs/todo/docker-home-manager-enhancements.md`:
-    *   ✅ Task 1: Passwordless sudo for coder user - Completed
-    *   Task 2: Add home manager switch step to the Dockerfile
-    *   Task 3: Parameterize the `/app` directory using an ENV variable
-    *   Task 4: Create a Home Manager option to configure `code-server` settings
-    *   Task 5: Update documentation for these changes
+1. Continue implementing Docker and Home Manager enhancements as outlined in `docs/todo/docker-home-manager-enhancements.md`:
+   * ✅ Task 1: Passwordless sudo for coder user - Completed
+   * ✅ Task 2: Home Manager switch in Dockerfile - Completed
+   * Task 3: Parameterize the `/app` directory using an ENV variable
+   * Task 4: Create a Home Manager option to configure `code-server` settings
+   * Task 5: Update documentation for these changes
+2. Consider adding more examples for other languages/frameworks
+3. Fully test the extension installation within a real code-server environment
+4. Consider mounting the host's Docker socket as a future optimization to allow the container to use the host's Docker daemon instead of running Docker-in-Docker
 
 ## Active Decisions & Considerations
 
-*   Successfully implemented Task 2 (Home Manager switch in Dockerfile):
-    *   Added a step to copy the home-manager directory to a temporary location in the container
-    *   Ran `nix run github:nix-community/home-manager -- switch --flake` to apply the base configuration
-    *   Cleaned up the temporary files afterward
-    *   Set the working directory back to /app for the mounted volume
-    *   Tested and confirmed working with home-manager, zsh, essential packages, Docker configuration, and oh-my-zsh all properly installed
-
-*   Changed the Docker base image from nixos/nix to Debian with single-user Nix to allow running as a non-root user while still having full Nix functionality.
-*   Adopted a simpler approach focusing on the Nix flake template that can be easily cloned or included in home-manager.
-*   Maintained the Docker-based approach for containerization as an alternative option.
-*   Kept the focus on `linux/amd64` platform for initial setup.
-*   Designed the flake to be easily customizable by modifying the buildInputs and shellHook.
-*   Focused on users directly using the `code-server` binary rather than creating a custom CLI tool.
-*   Maintained backward compatibility with the original approach for users who prefer it.
-*   Implemented a layered approach to managing development environments with overlayed profiles:
-    *   Base layer for essential tools and configurations
-    *   Personal layer for user-specific settings and preferences
-    *   Project-specific layer for project environments via direnv
-*   Created a testing script that validates the Home Manager configuration within a Docker environment.
-*   Designed the project template to demonstrate how to integrate with the overlayed profiles.
-*   Fixed the structure of `homeConfigurations` in `nix/home-manager/flake.nix` to be a flat attrset with direct entries for each configuration, rather than a nested structure that was causing the test script to fail.
-*   Added `gnused` to the Dockerfile to ensure the `test-profiles.sh` script can run successfully in the Docker environment.
-    *   Decided to optimize Docker-in-Docker performance by adding volume caching for Docker images while maintaining complete isolation of the container, rather than mounting the host's Docker socket which would have been faster but less isolated.
-*   Decided to manage `home-manager` purely declaratively (`programs.home-manager.enable = true;`) and removed the imperative installation from the Dockerfile to resolve activation conflicts:
-    *   This approach ensures a consistent and reliable Home Manager setup
-    *   Avoids the conflicts that arise when the same package is managed both imperatively and declaratively
-    *   Provides a cleaner separation of concerns in the configuration
+* Focused exclusively on the Docker approach with home-manager, removing the top-level flake
+* Maintained project-specific flakes in examples and templates to demonstrate environment layering
+* Changed the Docker base image from nixos/nix to Debian with single-user Nix to allow running as a non-root user while still having full Nix functionality
+* Implemented a layered approach to managing development environments with overlayed profiles:
+  * Base layer for essential tools and configurations
+  * Personal layer for user-specific settings and preferences
+  * Project-specific layer for project environments via direnv
+* Decided to optimize Docker-in-Docker performance by adding volume caching for Docker images while maintaining complete isolation of the container, rather than mounting the host's Docker socket which would have been faster but less isolated
+* Decided to manage `home-manager` purely declaratively (`programs.home-manager.enable = true;`) and removed the imperative installation from the Dockerfile to resolve activation conflicts
 
 ## Learnings & Insights
 
-*   Using Debian with single-user Nix installation provides better flexibility for running as a non-root user while maintaining full Nix functionality.
-*   The flake template approach provides a cleaner separation between the development environment and project code.
-*   Using Nix flakes allows for reproducible development environments across different machines.
-*   The home-manager integration pattern is more aligned with how users expect development tools to work.
-*   Maintaining backward compatibility ensures that existing users can continue to use the tool as they're accustomed to.
-*   Simplifying the approach to focus on being a template makes it easier for users to understand and use.
-*   The code-server `folder` query parameter (e.g., `http://localhost:7080/?folder=/app/examples/golang`) provides a convenient way to directly open specific folders, improving the user experience.
-*   Overlayed profiles provide a modular approach to managing development environments:
-    *   Modularity: Easily add, remove, or modify specific aspects of the configuration
-    *   Portability: Apply consistent configurations across different machines
-    *   Maintainability: Simpler to update and extend over time
-    *   Flexibility: Mix and match profiles based on needs (e.g., work vs. personal machines)
-*   Direnv integration with Nix flakes creates a seamless development experience by automatically loading project-specific environments.
-*   Testing within Docker provides a way to validate configurations without affecting the host system.
-*   The structure of `homeConfigurations` in a Nix flake is important for proper integration with Home Manager. It should be a flat attrset with direct entries for each configuration, rather than a nested structure.
-*   When running tests in a Docker environment, it's important to ensure that all required tools (like `sed`) are available in the environment.
-*   When testing Home Manager configurations in a Docker environment, it's important to explicitly specify the username in the command, as the environment variable may not be passed correctly.
-*   Docker volume caching provides significant performance benefits for Docker-in-Docker operations:
-    *   Faster container startup times as images don't need to be re-downloaded
-    *   Reduced disk space usage by avoiding duplicate image storage
-    *   Improved testing efficiency when running tests that require Docker
-    *   Maintaining container isolation while still optimizing performance
-*   Installing `home-manager` both imperatively (e.g., `nix-env` in Dockerfile) and declaratively (`programs.home-manager.enable = true;`) causes conflicts during `home-manager switch`. The solution is to rely solely on declarative management and use `nix run` for the initial activation if the command isn't in the PATH:
-    *   When `home-manager` is installed both ways, the imperative installation can interfere with the declarative management
-    *   Using `nix run github:nix-community/home-manager -- switch --flake .#coder` for initial activation avoids this conflict
-    *   After the first successful activation, `home-manager` is available in the PATH through the declarative configuration
-    *   This approach ensures a consistent and reliable Home Manager setup across different environments
-*   When writing scripts that use `home-manager` commands, it's important to use `nix run github:nix-community/home-manager` instead of directly calling `home-manager` for initial validation or activation. This ensures the script works correctly even when the `home-manager` command isn't yet available in the PATH, which is the case before the first successful activation.
+* Using Debian with single-user Nix installation provides better flexibility for running as a non-root user while maintaining full Nix functionality
+* The code-server `folder` query parameter (e.g., `http://localhost:7080/?folder=/app/examples/golang`) provides a convenient way to directly open specific folders, improving the user experience
+* Overlayed profiles provide a modular approach to managing development environments:
+  * Modularity: Easily add, remove, or modify specific aspects of the configuration
+  * Portability: Apply consistent configurations across different machines
+  * Maintainability: Simpler to update and extend over time
+  * Flexibility: Mix and match profiles based on needs (e.g., work vs. personal machines)
+* Direnv integration with Nix flakes creates a seamless development experience by automatically loading project-specific environments
+* Docker volume caching provides significant performance benefits for Docker-in-Docker operations
+* Installing `home-manager` both imperatively and declaratively causes conflicts during `home-manager switch`. The solution is to rely solely on declarative management and use `nix run` for the initial activation if the command isn't in the PATH

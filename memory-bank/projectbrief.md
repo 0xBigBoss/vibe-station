@@ -2,22 +2,20 @@
 
 ## Core Goal
 
-A Nix flake template for vibe coding. It leverages Nix to quickly create a Coder environment
-pre-configured with an agentic developer, Cline, that can be used with any project without requiring tight VCS integration.
+A Docker-based environment for vibe coding. It leverages Docker and Home Manager to quickly create a Code Server environment pre-configured with an agentic developer, Cline, that can be used with any project without requiring tight VCS integration.
 
 ## Scope
 
-- A Nix flake template that can be used in multiple ways
-- Support for integration with home-manager
-- Direct usage by cloning the repository
-- Documentation for all usage approaches
+- A Docker-based setup for easy deployment and consistent environment
+- Home Manager configuration for declarative environment management
+- Support for project-specific environments through project flakes and direnv
+- Documentation for Docker usage and Home Manager configuration
 - Example projects demonstrating usage
 
 ## Success Metrics
 
 - Users can use Vibe Station with any project without requiring tight VCS integration
-- Users can include Vibe Station in their home-manager configuration
-- Users can clone and use Vibe Station directly
+- Users can customize their environment through Home Manager profiles
 - The environment is consistent across different projects
 - Example projects demonstrate how to use Vibe Station effectively
 - Documentation is comprehensive and easy to follow
