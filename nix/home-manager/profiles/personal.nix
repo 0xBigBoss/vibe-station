@@ -47,7 +47,7 @@
       oh-my-zsh = {
         enable = true;
         plugins = ["git" "docker"]; # Add desired plugins
-        theme = "ys"; # Set desired theme
+        theme = "robbyrussell"; # Set desired theme
       };
     };
 
