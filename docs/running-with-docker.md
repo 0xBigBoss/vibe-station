@@ -93,6 +93,42 @@ This guide provides step-by-step instructions to run the Vibe Station code-serve
     *   `coder-server-data`: Persists code-server settings and extensions
     *   `docker-images-data`: Caches Docker images when using Docker within the container
 
+## Customizing code-server Settings
+
+The Vibe Station environment includes a Home Manager option to configure code-server settings. By default, it sets:
+- Dark theme (`"workbench.colorTheme": "Default Dark Modern"`)
+- ZSH as the default terminal (`"terminal.integrated.defaultProfile.linux": "zsh"`)
+
+To customize these settings, you can modify the `nix/home-manager/profiles/base.nix` file:
+
+```nix
+# In nix/home-manager/profiles/base.nix
+options.vibe-station = {
+  code-server = {
+    settings = lib.mkOption {
+      type = lib.types.attrs;
+      default = {
+        "workbench.colorTheme" = "Default Dark Modern";
+        "terminal.integrated.defaultProfile.linux" = "zsh";
+        # Add your custom settings here
+        "editor.fontSize" = 14;
+        "editor.fontFamily" = "Fira Code, monospace";
+      };
+      # ...
+    };
+  };
+};
+```
+
+After making changes, apply them by running:
+
+```bash
+# Run from your host machine
+docker compose exec code-server bash -c "cd /app/nix/home-manager && home-manager switch --flake .#coder" > home-manager-switch.log 2>&1
+```
+
+The settings will be written to `/home/coder/.local/share/code-server/User/settings.json` inside the container.
+
 ## Managing Command Output
 
 When running commands that produce extensive output (like Nix builds or Docker operations), consider using one of these approaches to prevent filling up your terminal or context window:

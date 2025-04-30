@@ -28,7 +28,7 @@
      - Updated docker-compose.yml to use `${APP_DIR:-./}` for working directory and volume mounts
      - Updated documentation to reflect the changes and provide usage examples
 
-4. **Code-Server Settings Configuration**
+4. ✅ **Code-Server Settings Configuration** (Completed)
    - Create a Home Manager option to configure `code-server` settings
    - Allow setting the theme and default terminal profile
    - Target configuration file: `/home/coder/.local/share/code-server/User/settings.json`
@@ -39,8 +39,17 @@
          "terminal.integrated.defaultProfile.linux": "zsh"
      }
      ```
+   - Implementation:
+     - Added `vibe-station.code-server.settings` option in `base.nix`
+     - Set default theme to "Default Dark Modern" and terminal profile to "zsh"
+     - Used `builtins.toJSON` to convert settings to JSON format
+     - Added documentation in `docs/running-with-docker.md` with usage examples
 
-5. **Documentation Updates**
+5. ✅ **Documentation Updates** (Completed)
    - Update documentation to reflect the Dockerfile changes
    - Document the new Home Manager option for code-server settings
    - Provide examples of customizing the settings
+   - Implementation:
+     - Added a new "Customizing code-server Settings" section to docs/running-with-docker.md
+     - Included examples of how to modify settings and apply changes
+     - Documented the default settings and their purpose
