@@ -43,9 +43,20 @@ This guide provides step-by-step instructions to run the Vibe Station code-serve
 
 ## Notes
 
+*   This setup uses a Debian-based Docker image with Nix installed in single-user mode, allowing you to run as a non-root user while still having full Nix functionality.
 *   This setup currently focuses on the `linux/amd64` architecture.
 *   The `flake.nix` file defines the development environment, including code-server and pre-installed tools.
 *   The `shellHook` in `flake.nix` attempts to automatically install the `saoudrizwan.claude-dev` VS Code extension when the code-server workspace starts.
+*   The Docker container includes a dedicated `coder` user for running Home Manager commands.
+*   The Home Manager configuration is set to use the `coder` user by default.
+*   When running Home Manager commands in the Docker container, use the `coder` user:
+    ```bash
+    docker compose exec code-server bash -c "su - coder -c 'cd /app/nix/home-manager && nix run home-manager/master -- switch --flake .#coder'"
+    ```
+*   The Docker Compose setup includes several volumes for caching:
+    *   `nix-store-data`: Caches the Nix store to speed up package installations
+    *   `coder-server-data`: Persists code-server settings and extensions
+    *   `docker-images-data`: Caches Docker images when using Docker within the container
 
 ## Alternative Approaches
 

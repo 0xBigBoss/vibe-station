@@ -27,6 +27,8 @@ nix flake init -t github:username/vibe-station
 
 ### Option 2: Include in Home Manager
 
+Vibe Station provides a complete Home Manager configuration with overlayed profiles:
+
 ```nix
 # In your home-manager configuration
 {
@@ -40,22 +42,26 @@ nix flake init -t github:username/vibe-station
     homeConfigurations."yourusername" = home-manager.lib.homeManagerConfiguration {
       # ...
       modules = [
-        {
-          # Add vibe-station to your packages
-          home.packages = [ vibe-station.packages.${system}.code-server ];
-          # Or use it in your shell configuration
-          programs.bash.initExtra = ''
-            # Add vibe-station shell hook
-            if [ -f ${vibe-station}/bin/vibe-station-hook ]; then
-              source ${vibe-station}/bin/vibe-station-hook
-            fi
-          '';
-        }
+        # Option A: Use the complete overlayed profiles setup
+        vibe-station.homeManagerModules.default
+
+        # Option B: Or just add vibe-station to your packages
+        # {
+        #   home.packages = [ vibe-station.packages.${system}.code-server ];
+        #   programs.bash.initExtra = ''
+        #     # Add vibe-station shell hook
+        #     if [ -f ${vibe-station}/bin/vibe-station-hook ]; then
+        #       source ${vibe-station}/bin/vibe-station-hook
+        #     fi
+        #   '';
+        # }
       ];
     };
   };
 }
 ```
+
+For detailed instructions on using the overlayed profiles, see [Nix Home Manager Overlayed Profiles](nix/home-manager/README.md).
 
 ### Option 3: Clone and Use Directly
 
@@ -78,6 +84,8 @@ Note: This project uses code-server (https://github.com/coder/code-server), whic
 ## Examples
 
 - [Golang Example](examples/golang/README.md) - A simple Go HTTP server example that demonstrates how to use Vibe Station with a Go project.
+- [Home Manager Overlayed Profiles](nix/home-manager/README.md) - A complete Home Manager configuration with overlayed profiles for managing your development environment.
+- [Project Template](nix/home-manager/examples/project-template/README.md) - A template for creating projects that integrate with the overlayed profiles.
 
 ## Notes
 

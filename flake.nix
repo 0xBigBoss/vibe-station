@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -21,7 +25,7 @@
       # Define the development shell
       devShells.default = pkgs.mkShell {
         buildInputs = [
-          pkgs.code-server # Add the code-server package
+          pkgs.code-server
         ];
         shellHook = ''
           echo "Welcome to the Vibe Station dev shell!"
@@ -40,9 +44,22 @@
       };
 
       # Add template for easy use with nix flake init
-      templates.default = {
-        path = ./.;
-        description = "A Nix flake template for the Vibe Station development environment";
+      templates = {
+        default = {
+          path = ./.;
+          description = "A Nix flake template for the Vibe Station development environment";
+        };
+        project = {
+          path = ./nix/home-manager/examples/project-template;
+          description = "Project template with direnv integration for Vibe Station overlayed profiles";
+        };
+      };
+
+      # Export Home Manager modules
+      homeManagerModules = {
+        default = import ./nix/home-manager/home.nix;
+        base = import ./nix/home-manager/profiles/base.nix;
+        personal = import ./nix/home-manager/profiles/personal.nix;
       };
     });
 }

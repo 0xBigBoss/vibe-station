@@ -9,8 +9,10 @@ services:
     volumes:
       - .:/app
       - nix-store-data:/nix/store
-      - coder-server-data:/root/.local/share/code-server
+      - coder-server-data:/home/coder/.local/share/code-server
+      - docker-images-data:/var/lib/docker
 
 volumes:
   nix-store-data:
   coder-server-data:
+  docker-images-data:
