@@ -22,7 +22,7 @@ experience for vibe coding.
 # Create a new project using the template
 mkdir my-vibe-station
 cd my-vibe-station
-nix flake init -t github:username/vibe-station
+nix flake init -t github:0xbigboss/vibe-station
 ```
 
 ### Option 2: Include in Home Manager
@@ -35,7 +35,7 @@ Vibe Station provides a complete Home Manager configuration with overlayed profi
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
-    vibe-station.url = "github:username/vibe-station";
+    vibe-station.url = "github:0xbigboss/vibe-station";
   };
 
   outputs = { nixpkgs, home-manager, vibe-station, ... }: {
@@ -67,7 +67,7 @@ For detailed instructions on using the overlayed profiles, see [Nix Home Manager
 
 ```bash
 # Clone the repository
-git clone https://github.com/username/vibe-station.git
+git clone https://github.com/0xbigboss/vibe-station.git
 cd vibe-station
 
 # Enter the development shell
