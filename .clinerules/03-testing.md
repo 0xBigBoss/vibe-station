@@ -10,16 +10,16 @@ allowing us to run as a non-root user while still having full Nix functionality.
 The project is using docker compose to speed up the process and cache the nix store
 in a volume. Be sure it is running before running the tests.
 
+**IMPORTANT**: For Docker-specific commands and best practices, refer to `.clinerules/03-docker-commands.md`.
+Always follow those guidelines to prevent context window overflow.
+
 For example, to use nixos containers to run tests, start the code-server-test container
 with the following command:
 
 ```bash
 # Use -d flag to run in detached mode (background)
 # Add --quiet-pull to reduce output when pulling images
-docker compose up --build -d code-server
-
-# Alternatively, redirect verbose output to a log file
-# docker compose up --build -d code-server > docker-build.log 2>&1
+docker compose up --build -d code-server --quiet-pull > docker-build.log 2>&1
 ```
 
 Then, run the tests with the following command:
@@ -31,9 +31,9 @@ docker compose exec code-server nix-shell \
   --run "cowsay hello | lolcat"
 
 # For commands with verbose output, redirect to a log file
-# docker compose exec code-server nix-shell \
-#   -p some-package \
-#   --run "verbose-command" > command-output.log 2>&1
+docker compose exec code-server nix-shell \
+  -p some-package \
+  --run "verbose-command" > command-output.log 2>&1
 ```
 
 Sometimes the nix image gets updated and we need reset the volume to repair the /nix/store.
@@ -43,10 +43,7 @@ Sometimes the nix image gets updated and we need reset the volume to repair the 
 docker compose down -v
 
 # Restart with reduced output
-docker compose up --build -d code-server --quiet-pull
-
-# Or redirect output to a log file
-# docker compose up --build -d code-server > docker-rebuild.log 2>&1
+docker compose up --build -d code-server --quiet-pull > docker-rebuild.log 2>&1
 ```
 
 ## Managing Command Output

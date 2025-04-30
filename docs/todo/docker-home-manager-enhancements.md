@@ -8,10 +8,17 @@
    - Implementation: Added `echo "coder ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/coder` to Dockerfile
    - Tested and confirmed working after running `docker compose down -v` and `docker compose up -d`
 
-2. **Home Manager Switch in Dockerfile**
+2. ✅ **Home Manager Switch in Dockerfile** (Completed)
    - Add the home manager switch step to the Dockerfile
    - Apply the base configuration during image build
    - Ensure proper execution order and permissions
+   - Implementation: Added steps to copy home-manager directory and run `nix run github:nix-community/home-manager -- switch --flake`
+   - Tested and confirmed working with:
+     - home-manager installed and working (version 25.05-pre)
+     - zsh installed in the expected location
+     - Essential packages from the base profile (git, curl, jq) installed
+     - Docker configuration file created correctly
+     - oh-my-zsh installed correctly
 
 3. **Parameterize App Directory**
    - Parameterize the `/app` directory in the Dockerfile using an ENV variable

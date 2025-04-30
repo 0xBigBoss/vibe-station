@@ -75,7 +75,7 @@
     *   Testing the direnv integration with the project template
 2.  ✅ Complete Docker and Home Manager Enhancements:
     *   ✅ Task 1: Passwordless sudo for coder user - Verified working with `sudo -n id` command
-    *   Task 2: Home Manager switch in Dockerfile
+    *   ✅ Task 2: Home Manager switch in Dockerfile - Completed and tested successfully
     *   Task 3: Parameterize App Directory
     *   Task 4: Code-Server Settings Configuration
     *   Task 5: Documentation Updates
@@ -95,6 +95,13 @@
     *   Task 5: Update documentation for these changes
 
 ## Active Decisions & Considerations
+
+*   Successfully implemented Task 2 (Home Manager switch in Dockerfile):
+    *   Added a step to copy the home-manager directory to a temporary location in the container
+    *   Ran `nix run github:nix-community/home-manager -- switch --flake` to apply the base configuration
+    *   Cleaned up the temporary files afterward
+    *   Set the working directory back to /app for the mounted volume
+    *   Tested and confirmed working with home-manager, zsh, essential packages, Docker configuration, and oh-my-zsh all properly installed
 
 *   Changed the Docker base image from nixos/nix to Debian with single-user Nix to allow running as a non-root user while still having full Nix functionality.
 *   Adopted a simpler approach focusing on the Nix flake template that can be easily cloned or included in home-manager.
