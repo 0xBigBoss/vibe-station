@@ -21,6 +21,12 @@
     *   Installed Nix in single-user mode for the non-root 'coder' user
     *   Added necessary configurations to enable flakes and other Nix features
     *   Installed code-server using nix-env (removed home-manager to avoid conflicts)
+    *   Configured passwordless sudo for the coder user via `/etc/sudoers.d/coder`
+*   Updated testing instructions to manage command output:
+    *   Added guidance on redirecting verbose output to log files
+    *   Added instructions for using quiet flags when available
+    *   Added examples of filtering output with grep
+    *   Updated documentation in both .clinerules/03-testing.md and docs/running-with-docker.md
 *   Resolved conflict between imperative (`nix-env` in Dockerfile) and declarative (`programs.home-manager.enable = true;`) installation of `home-manager`:
     *   Removed `home-manager` from `nix-env` installation in Dockerfile to avoid activation conflicts
     *   Kept the declarative management in Home Manager configuration (`programs.home-manager.enable = true;` in home.nix)
@@ -67,7 +73,13 @@
 1.  ✅ Complete the testing of the overlayed profiles within the Docker environment by:
     *   ✅ Running the full test script with appropriate modifications to avoid Docker-in-Docker issues
     *   Testing the direnv integration with the project template
-2.  Update documentation to reflect the changes made to the `flake.nix` structure and the addition of `gnused` to the Dockerfile.
+2.  ✅ Complete Docker and Home Manager Enhancements:
+    *   ✅ Task 1: Passwordless sudo for coder user - Verified working with `sudo -n id` command
+    *   Task 2: Home Manager switch in Dockerfile
+    *   Task 3: Parameterize App Directory
+    *   Task 4: Code-Server Settings Configuration
+    *   Task 5: Documentation Updates
+3.  Update documentation to reflect the changes made to the `flake.nix` structure and the addition of `gnused` to the Dockerfile.
 3.  Test the flake template approach on different platforms.
 4.  Enhance the customization options in the flake.nix file.
 5.  Consider adding more documentation on how to use Vibe Station with specific project types.
@@ -75,12 +87,12 @@
 7.  Potentially add more examples for other languages/frameworks.
 8.  Fully test the extension installation within a real code-server environment.
 9.  Consider mounting the host's Docker socket as a future optimization to allow the container to use the host's Docker daemon instead of running Docker-in-Docker.
-10. Implement Docker and Home Manager enhancements as outlined in `docs/todo/docker-home-manager-enhancements.md`:
-    *   Patch the Debian container for passwordless sudo for the `coder` user
-    *   Add home manager switch step to the Dockerfile
-    *   Parameterize the `/app` directory using an ENV variable
-    *   Create a Home Manager option to configure `code-server` settings
-    *   Update documentation for these changes
+10. Continue implementing Docker and Home Manager enhancements as outlined in `docs/todo/docker-home-manager-enhancements.md`:
+    *   ✅ Task 1: Passwordless sudo for coder user - Completed
+    *   Task 2: Add home manager switch step to the Dockerfile
+    *   Task 3: Parameterize the `/app` directory using an ENV variable
+    *   Task 4: Create a Home Manager option to configure `code-server` settings
+    *   Task 5: Update documentation for these changes
 
 ## Active Decisions & Considerations
 

@@ -1,7 +1,7 @@
 FROM debian:bookworm
 
 RUN apt update \
-  && apt install -y curl xz-utils \
+  && apt install -y curl xz-utils sudo \
   && /sbin/useradd -m coder \
   && mkdir -p /home/coder/.local/share/code-server \
   && chown -R coder /home/coder \
@@ -9,6 +9,9 @@ RUN apt update \
   && chown coder /nix \
   && mkdir -p /etc/nix \
   && chown coder /etc/nix \
+  && mkdir -p /etc/sudoers.d \
+  && echo "coder ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/coder \
+  && chmod 440 /etc/sudoers.d/coder \
   && apt clean
 
 USER coder

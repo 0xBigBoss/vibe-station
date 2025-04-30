@@ -53,12 +53,22 @@
     *   Updated documentation to provide clear guidance on initial and subsequent Home Manager configuration activations
     *   Updated the test script to handle both initial and subsequent activations correctly
 *   Fixed the test script (`test-profiles.sh`) to use `nix run github:nix-community/home-manager` for initial validation instead of directly calling `home-manager`, resolving the issue with the command not being available initially.
+*   Completed Task 1 from the Docker and Home Manager Enhancements:
+    *   Verified that passwordless sudo is working correctly for the coder user
+    *   Confirmed the configuration in the Dockerfile: `echo "coder ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/coder`
+    *   Successfully tested with `sudo -n id` command
 
 ## What's Left to Build
 
 *   ✅ Complete the testing of the overlayed profiles within the Docker environment by:
     *   ✅ Running the full test script with appropriate modifications to avoid Docker-in-Docker issues
     *   Testing the direnv integration with the project template
+*   ✅ Complete Docker and Home Manager Enhancements:
+    *   ✅ Task 1: Passwordless sudo for coder user
+    *   Task 2: Home Manager switch in Dockerfile
+    *   Task 3: Parameterize App Directory
+    *   Task 4: Code-Server Settings Configuration
+    *   Task 5: Documentation Updates
 *   Update documentation to reflect the changes made to the `flake.nix` structure and the addition of `gnused` to the Dockerfile.
 *   Test the flake template approach on different platforms.
 *   Enhance the customization options in the flake.nix file.

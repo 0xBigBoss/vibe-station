@@ -2,9 +2,11 @@
 
 ## Tasks
 
-1. **Passwordless Sudo for Coder User**
+1. ✅ **Passwordless Sudo for Coder User** (Completed)
    - Patch the Debian container so that the `coder` user has passwordless sudo working correctly
    - Add necessary configuration to `/etc/sudoers.d/` to grant the `coder` user passwordless sudo privileges
+   - Implementation: Added `echo "coder ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/coder` to Dockerfile
+   - Tested and confirmed working after running `docker compose down -v` and `docker compose up -d`
 
 2. **Home Manager Switch in Dockerfile**
    - Add the home manager switch step to the Dockerfile

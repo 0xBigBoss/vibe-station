@@ -21,10 +21,18 @@ This guide provides step-by-step instructions to run the Vibe Station code-serve
     ```
 2.  **Build and Start the Container:** Use Docker Compose to build the image defined in `Dockerfile` and start the container(s) defined in `docker-compose.yml`.
     ```bash
+    # Standard command
     docker compose up --build -d
+
+    # To reduce output verbosity
+    docker compose up --build -d --quiet-pull
+
+    # To redirect verbose output to a log file
+    docker compose up --build -d > docker-build.log 2>&1
     ```
     *   `--build`: Forces Docker Compose to build the image using the `Dockerfile`.
     *   `-d`: Runs the containers in detached mode (in the background).
+    *   `--quiet-pull`: Reduces the output when pulling images.
 
 3.  **Access code-server:** Once the container is running, you should be able to access the code-server interface.
     *   Open your browser and navigate to `http://localhost:7080`
@@ -41,9 +49,16 @@ This guide provides step-by-step instructions to run the Vibe Station code-serve
     docker compose down
     ```
 
+    If you need to reset the Nix store due to corruption:
+    ```bash
+    docker compose down -v
+    ```
+    The `-v` flag removes the volumes, which will clear the Nix store cache.
+
 ## Notes
 
 *   This setup uses a Debian-based Docker image with Nix installed in single-user mode, allowing you to run as a non-root user while still having full Nix functionality.
+*   The `coder` user has passwordless sudo privileges configured in the Dockerfile.
 *   This setup currently focuses on the `linux/amd64` architecture.
 *   The `flake.nix` file defines the development environment, including code-server and pre-installed tools.
 *   The `shellHook` in `flake.nix` attempts to automatically install the `saoudrizwan.claude-dev` VS Code extension when the code-server workspace starts.
@@ -54,16 +69,46 @@ This guide provides step-by-step instructions to run the Vibe Station code-serve
         ```bash
         # Run from your host machine
         docker compose exec code-server bash -c "cd /app/nix/home-manager && nix run github:nix-community/home-manager -- switch --flake .#coder"
+
+        # To redirect verbose output to a log file
+        docker compose exec code-server bash -c "cd /app/nix/home-manager && nix run github:nix-community/home-manager -- switch --flake .#coder" > home-manager-activation.log 2>&1
         ```
     *   **Subsequent Activations:** After the first successful activation, the `home-manager` command will be available in the `coder` user's PATH, and you can use the standard command:
         ```bash
         # Run from your host machine
         docker compose exec code-server bash -c "cd /app/nix/home-manager && home-manager switch --flake .#coder"
+
+        # To redirect verbose output to a log file
+        docker compose exec code-server bash -c "cd /app/nix/home-manager && home-manager switch --flake .#coder" > home-manager-switch.log 2>&1
         ```
 *   The Docker Compose setup includes several volumes for caching:
     *   `nix-store-data`: Caches the Nix store to speed up package installations
     *   `coder-server-data`: Persists code-server settings and extensions
     *   `docker-images-data`: Caches Docker images when using Docker within the container
+
+## Managing Command Output
+
+When running commands that produce extensive output (like Nix builds or Docker operations), consider using one of these approaches to prevent filling up your terminal or context window:
+
+1. **Redirect to log files** when you need to preserve the full output:
+   ```bash
+   command > output.log 2>&1
+   ```
+
+2. **Use quiet flags** when available:
+   - `--quiet` or `-q` for many commands
+   - `--quiet-pull` for Docker Compose
+   - `--no-progress` for some Docker operations
+
+3. **Filter output** with grep or other tools:
+   ```bash
+   command | grep "important info"
+   ```
+
+4. **Use silent mode** for commands that support it:
+   ```bash
+   command -s
+   ```
 
 ## Alternative Approaches
 
