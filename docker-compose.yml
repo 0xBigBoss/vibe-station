@@ -7,7 +7,7 @@ services:
     ports:
       - "7080"
     volumes:
-      - .:/app
+      - ${APP_DIR:-./}:/app
       - nix-store-data:/nix/store
       - coder-server-data:/home/coder/.local/share/code-server
       - docker-images-data:/var/lib/docker

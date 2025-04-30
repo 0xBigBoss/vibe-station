@@ -18,6 +18,7 @@
     # helm # Kubernetes package manager (optional, uncomment if needed)
 
     # Development Tools
+    code-server
     # nodejs # Latest Node.js (optional, uncomment if needed)
     # python3 # Latest Python 3 (optional, uncomment if needed)
     # go # Latest Go (optional, uncomment if needed)

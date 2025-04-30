@@ -25,16 +25,12 @@ RUN echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf && \
 
 USER coder
 
-# Install required packages
-RUN nix-env -iA nixpkgs.code-server
-
 # Install home-manager and apply base configuration
 WORKDIR /tmp/vibe-station
 COPY --chown=coder:coder ./nix/home-manager /tmp/vibe-station/nix/home-manager
 RUN nix run github:nix-community/home-manager -- switch --flake /tmp/vibe-station/nix/home-manager#coder && \
   rm -rf /tmp/vibe-station
 
-# Set working directory back to /app for mounted volume
 WORKDIR /app
 
 # Expose port 7080 for code-server

@@ -29,10 +29,14 @@ This guide provides step-by-step instructions to run the Vibe Station code-serve
 
     # To redirect verbose output to a log file
     docker compose up --build -d > docker-build.log 2>&1
+
+    # To customize the app directory (default is /app)
+    APP_DIR=/custom/path docker compose up --build -d
     ```
     *   `--build`: Forces Docker Compose to build the image using the `Dockerfile`.
     *   `-d`: Runs the containers in detached mode (in the background).
     *   `--quiet-pull`: Reduces the output when pulling images.
+    *   `APP_DIR`: Optional environment variable to customize the host app directory for mounting into the container.
 
 3.  **Access code-server:** Once the container is running, you should be able to access the code-server interface.
     *   Open your browser and navigate to `http://localhost:7080`
@@ -41,8 +45,9 @@ This guide provides step-by-step instructions to run the Vibe Station code-serve
     *   Once logged in, you can start using the VS Code interface in your browser
     *   To open a specific folder directly, use the `folder` query parameter in the URL:
         ```
-        http://localhost:7080/?folder=/app/examples/golang
+        http://localhost:7080/?folder=${APP_DIR}/examples/golang
         ```
+        By default, `${APP_DIR}` is set to current working directory if not specified.
 
 4.  **Stopping the Workspace:** To stop the running containers:
     ```bash
@@ -59,6 +64,8 @@ This guide provides step-by-step instructions to run the Vibe Station code-serve
 
 *   This setup uses a Debian-based Docker image with Nix installed in single-user mode, allowing you to run as a non-root user while still having full Nix functionality.
 *   The `coder` user has passwordless sudo privileges configured in the Dockerfile.
+*   The app directory is configurable via the `APP_DIR` environment variable on the host, allowing you to mount a project inside the container. This is useful for:
+    * Mounting the project to develop within the container
 *   This setup currently focuses on the `linux/amd64` architecture.
 *   The `flake.nix` file defines the development environment, including code-server and pre-installed tools.
 *   The `shellHook` in `flake.nix` attempts to automatically install the `saoudrizwan.claude-dev` VS Code extension when the code-server workspace starts.

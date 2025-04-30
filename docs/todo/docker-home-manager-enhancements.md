@@ -20,10 +20,13 @@
      - Docker configuration file created correctly
      - oh-my-zsh installed correctly
 
-3. **Parameterize App Directory**
+3. ✅ **Parameterize App Directory** (Completed)
    - Parameterize the `/app` directory in the Dockerfile using an ENV variable
    - Make the mount point configurable for different use cases
    - Update relevant scripts and configurations to use this variable
+   - Implementation:
+     - Updated docker-compose.yml to use `${APP_DIR:-./}` for working directory and volume mounts
+     - Updated documentation to reflect the changes and provide usage examples
 
 4. **Code-Server Settings Configuration**
    - Create a Home Manager option to configure `code-server` settings
