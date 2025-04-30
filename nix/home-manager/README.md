@@ -16,20 +16,6 @@ This approach offers several benefits:
 - **Maintainability:** Simpler to update and extend over time
 - **Flexibility:** Mix and match profiles based on your needs (e.g., work vs. personal machines)
 
-## Prerequisites
-
-- **Nix:** Ensure Nix is installed with Flakes enabled
-  ```bash
-  # Install Nix (if not already installed)
-  sh <(curl -L https://nixos.org/nix/install) --daemon
-
-  # Enable flakes by adding this to /etc/nix/nix.conf or ~/.config/nix/nix.conf
-  experimental-features = nix-command flakes
-  ```
-
-- **Git:** Required for cloning the repository and managing configurations
-- **Direnv:** (Optional but recommended) For automatic project environment activation
-
 ## Directory Structure
 
 ```
@@ -43,48 +29,24 @@ nix/home-manager/
 └── README.md              # This documentation
 ```
 
-## Quick Start Guide
+## Using with Docker
 
-### 1. Initial Setup
+The Vibe Station Docker container uses a Debian-based image with Nix installed in single-user mode, allowing you to run as a non-root user while still having full Nix functionality. The container includes Home Manager and a dedicated `coder` user for running Home Manager commands.
 
-```bash
-# Clone the repository (if you haven't already)
-git clone https://github.com/username/vibe-station.git
-cd vibe-station/nix/home-manager
-
-# Customize the configuration for your system
-# (See the "Customization" section below)
-
-# Test your configuration (optional but recommended)
-./test-profiles.sh
-```
-
-### 2. Customize Configuration Files
-
-Edit these files to match your preferences:
-
-- **home.nix:** Set your username and home directory path
-  ```nix
-  home.username = "yourusername"; # Replace with your actual username
-  home.homeDirectory = "/home/yourusername"; # Replace with your actual home path
-  ```
-
-- **profiles/personal.nix:** Set your personal information
-  ```nix
-  programs.git = {
-    userName = "Your Name"; # Replace with your name
-    userEmail = "your.email@example.com"; # Replace with your email
-    # Other personal preferences...
-  };
-  ```
-
-### 3. Apply the Configuration
+### Activating Home Manager in Docker
 
 ```bash
-# Apply the configuration to your system
-# Replace 'yourusername' with the username you set in home.nix
-nix run home-manager/master -- switch --flake .#yourusername
+# Initial Activation (if home-manager command isn't available yet):
+docker compose exec code-server bash -c "cd /app/nix/home-manager && nix run github:nix-community/home-manager -- switch --flake .#coder" > home-manager-activation.log 2>&1
+
+# Subsequent Activations (after the first successful run):
+docker compose exec code-server bash -c "cd /app/nix/home-manager && home-manager switch --flake .#coder" > home-manager-switch.log 2>&1
 ```
+
+**Important Notes on Docker Usage:**
+- The Docker container includes a dedicated `coder` user.
+- The Home Manager configuration (`home.nix`) uses the `coder` user by default and manages the `home-manager` package itself declaratively (`programs.home-manager.enable = true;`). The `home-manager` package is *not* pre-installed in the Docker image via `nix-env` to avoid conflicts.
+- The initial activation requires `nix run` because the `home-manager` command isn't in the PATH until the first successful switch.
 
 ## Detailed Usage Guide
 
@@ -157,50 +119,6 @@ imports = [
   ./profiles/work.nix  # Add your new profile here
 ];
 ```
-
-## Testing with Docker
-
-The Vibe Station Docker container uses a Debian-based image with Nix installed in single-user mode, allowing you to run as a non-root user while still having full Nix functionality. The container includes Home Manager and a dedicated `coder` user for running Home Manager commands. We provide a convenient testing script that automates the validation process:
-
-```bash
-# Run the testing script
-./test-profiles.sh
-```
-
-This script will:
-1. Check prerequisites (Docker and Docker Compose)
-2. Start the Docker container
-3. Validate your Home Manager configuration syntax
-4. Test packages from your base profile
-5. Verify direnv configuration
-6. Provide a summary and next steps
-
-You can also run tests manually:
-
-```bash
-# Start the Docker container
-docker compose up --build -d code-server
-
-# Test building the configuration (syntax check)
-docker compose exec code-server bash -c "cd /app/nix/home-manager && home-manager build --flake .#coder --no-out-link"
-
-# Test if packages from your profiles are available
-docker compose exec code-server bash -c "nix-shell -p cowsay --run \"cowsay Testing packages from profiles\""
-
-# Apply the configuration (full test)
-# Initial Activation (if home-manager command isn't available yet):
-docker compose exec code-server bash -c "su - coder -c 'cd /app/nix/home-manager && nix run github:nix-community/home-manager -- switch --flake .#coder'"
-
-# Subsequent Activations (after the first successful run):
-docker compose exec code-server bash -c "su - coder -c 'cd /app/nix/home-manager && home-manager switch --flake .#coder'"
-```
-
-**Important Notes on Docker Testing:**
-- Docker testing primarily validates syntax and package availability.
-- The Docker container includes a dedicated `coder` user.
-- The Home Manager configuration (`home.nix`) uses the `coder` user by default and manages the `home-manager` package itself declaratively (`programs.home-manager.enable = true;`). The `home-manager` package is *not* pre-installed in the Docker image via `nix-env` to avoid conflicts.
-- The initial activation requires `nix run` because the `home-manager` command isn't in the PATH until the first successful switch.
-- The Docker container environment is ephemeral and may differ from your actual system.
 
 ## Customization
 
@@ -280,14 +198,6 @@ direnv allow
 ```
 
 See the [Project Template README](examples/project-template/README.md) for detailed instructions.
-
-## Integration with Vibe Station
-
-This Home Manager configuration is designed to work seamlessly with the broader Vibe Station project:
-
-1. **Standalone Usage:** Use this configuration independently to manage your development environment
-2. **With code-server:** Combine with code-server for a complete development environment
-3. **Project Integration:** Use with project-specific flakes for per-project environments (see the [Project Template](examples/project-template/))
 
 ## Troubleshooting
 

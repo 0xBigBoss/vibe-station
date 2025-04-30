@@ -6,7 +6,7 @@ This is a simple Golang example project that demonstrates how to use the Vibe St
 
 - `main.go` - A simple HTTP server that responds with "Hello from Vibe Station Golang Example!"
 - `go.mod` - Go module definition
-- `flake.nix` - Nix flake for the Go development environment
+- `flake.nix` - Optional Nix flake for project-specific development environment (can be used with direnv)
 
 ## Using with Vibe Station
 
@@ -15,28 +15,15 @@ This is a simple Golang example project that demonstrates how to use the Vibe St
    ```
    http://localhost:7080/?folder=/app/examples/golang
    ```
-3. The workspace will automatically have all the necessary Go tools installed
+3. The workspace will automatically have all the necessary Go tools installed via Home Manager
 4. Run the server with `go run main.go`
 5. Access the server at http://localhost:8080
-
-## Development Environment
-
-The `flake.nix` file defines a development environment with:
-
-- Go compiler and standard library
-- gopls (Go language server)
-- Various Go development tools (outline, code, pkgs, def, lint)
-
-When you enter the development shell (which happens automatically in the code-server workspace), you'll have access to all these tools.
 
 ## Testing the Example
 
 To test this example:
 
 ```bash
-# Enter the development shell
-nix develop
-
 # Run the server
 go run main.go
 ```
