@@ -1,5 +1,6 @@
 services:
   code-server:
+    image: 0xbigboss/vibe-station:latest
     platform: linux/amd64
     build: .
     stop_grace_period: 30s
