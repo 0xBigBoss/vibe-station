@@ -7,6 +7,12 @@
 }: {
   # --- Configuration ---
   config = {
+    # --- Personal Packages ---
+    # !! IMPORTANT: Customize these values !!
+    # home.packages = with pkgs; [
+    # cowsay
+    # ];
+
     # --- Personal Git Configuration ---
     # !! IMPORTANT: Customize these values !!
     programs.git = {
@@ -29,6 +35,8 @@
 
     # --- Personal Shell Customizations ---
     programs.zsh = {
+      syntaxHighlighting.enable = true;
+
       # Assuming zsh is enabled in base.nix
       # Add personal aliases or functions here
       shellAliases = {
