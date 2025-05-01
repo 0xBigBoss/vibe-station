@@ -6,10 +6,10 @@ services:
     working_dir: /app
     privileged: true
     ports:
-      - "7080"
+      - "${HOST_PORT:-}7080"
     volumes:
       - ${APP_DIR:-./}:/app
-      - nix-store-data:/nix/store
+      - nix-data:/nix
       - coder-server-data:/home/coder/.local/share/code-server
       - docker-images-data:/var/lib/docker
       - type: tmpfs
@@ -28,6 +28,6 @@ services:
       start_period: 40s
 
 volumes:
-  nix-store-data:
+  nix-data:
   coder-server-data:
   docker-images-data:

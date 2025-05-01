@@ -11,6 +11,23 @@ This is an experimental project for quickly prototyping an agentic developer exp
 - code-server pre-installed with Cline extension (`saoudrizwan.claude-dev`)
 - Works with any project without requiring tight VCS integration
 
+## Recommended Quickstart
+
+Clone the vibe-station repo into a subdirectory of your project and run the following commands:
+
+```bash
+# Clone the vibe-station repo
+git clone https://github.com/0xbigboss/vibe-station.git .vibe-station
+# Ignore the .vibe-station directory in your project
+echo ".vibe-station" >> .git/info/exclude
+# Run the vibe-station docker-compose command
+docker compose up -d -f .vibe-station/docker-compose.yml
+# Find the random port assigned by docker compose. Use `HOST_PORT` environment variable to specify a custom port.
+docker compose ps
+```
+
+Now you can access the code-server interface at `http://localhost:7080` or the random port assigned by docker compose, `docker compose ps` and use that port.
+
 ## Getting Started with Docker
 
 ### Prerequisites
@@ -27,15 +44,17 @@ This is an experimental project for quickly prototyping an agentic developer exp
 
 2. **Build and Start the Container:**
    ```bash
-   # Standard command (redirect output to reduce verbosity)
-   docker compose up --build -d > docker-build.log 2>&1
+   # Standard command for testing vibe-station (redirect output to reduce verbosity)
+   HOST_PORT=7080 docker compose up --build -d > docker-build.log 2>&1
 
    # To customize the app directory (default is current directory)
-   APP_DIR=/path/to/your/project docker compose up --build -d > docker-build.log 2>&1
+   APP_DIR=/path/to/your/project \
+   HOST_PORT=7080 \
+      docker compose up --build -d > docker-build.log 2>&1
    ```
 
 3. **Access code-server:**
-   - Open your browser and navigate to `http://localhost:7080`
+   - Open your browser and navigate to `http://localhost:7080` or the find the random port assigned by docker compose, `docker compose ps` and use that port.
    - Follow the on-screen instructions to complete the setup
    - Once logged in, you can start using the VS Code interface in your browser
 
