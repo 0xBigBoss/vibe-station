@@ -10,7 +10,7 @@ services:
     ports:
       - "${HOST_PORT:-}7080"
     volumes:
-      - ${APP_DIR:-./}:/app
+      - ${CODE_SERVER_APP_DIR:-./}:/app
       - nix-data:/nix
       - coder-server-data:/home/coder/.local/share/code-server
       - docker-images-data:/var/lib/docker
