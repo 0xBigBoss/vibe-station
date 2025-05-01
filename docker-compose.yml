@@ -6,7 +6,7 @@ services:
     stop_grace_period: 30s
     working_dir: /app
     privileged: true
-    command: --bind-addr 0.0.0.0:7080 --auth none --app-name ${APP_NAME:-vibe-station}
+    command: --bind-addr 0.0.0.0:7080 --auth none --app-name ${CODE_SERVER_APP_NAME:-vibe-station}
     ports:
       - "${HOST_PORT:-}7080"
     volumes:
