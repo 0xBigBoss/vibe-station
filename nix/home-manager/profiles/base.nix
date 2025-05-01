@@ -60,6 +60,7 @@
       unzip
       gnused # GNU sed implementation
       vim
+      fzf
       # cowsay # Fun utility (for testing)
       # lolcat # Rainbow output (for testing)
 
