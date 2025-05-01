@@ -22,8 +22,8 @@ until sudo docker info >/dev/null 2>&1; do
 done
 echo "Docker daemon started"
 
-# Run code-server in the background
-code-server --bind-addr 0.0.0.0:7080 --auth none &
+# Run code-server in the background with passed arguments
+code-server "$@" &
 CODE_SERVER_PID=$!
 
 # Wait for any process to exit
