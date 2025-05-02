@@ -7,7 +7,7 @@
   * Base profile with essential tools and configurations
   * Personal profile with user-specific settings
   * Project-specific environments via project flakes and direnv
-* code-server pre-installed with Cline extension (`saoudrizwan.claude-dev`)
+* code-server pre-installed with agentic developer capabilities
 * Docker-in-Docker support with volume caching for better performance
 * Passwordless sudo for the coder user
 * Home Manager switch in Dockerfile for initial configuration

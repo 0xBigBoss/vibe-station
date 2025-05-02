@@ -1,6 +1,6 @@
 # Vibe Station
 
-A project for quickly scaffolding a vibe coding station. It leverages Docker and Home Manager to quickly create a Code Server environment pre-configured with an agentic developer, Cline.
+A project for quickly scaffolding a vibe coding station. It leverages Docker and Home Manager to quickly create a Code Server environment pre-configured with an agentic developer experience.
 
 This is an experimental project for quickly prototyping an agentic developer experience for vibe coding.
 
@@ -8,8 +8,9 @@ This is an experimental project for quickly prototyping an agentic developer exp
 
 - Docker-based setup for easy deployment and consistent environment
 - Home Manager configuration for declarative environment management
-- code-server pre-installed with Cline extension (`saoudrizwan.claude-dev`)
+- code-server pre-installed with agentic developer capabilities
 - Works with any project without requiring tight VCS integration
+- Compose override feature for customizing the Code Server environment
 
 ## Recommended Quickstart
 
@@ -93,6 +94,26 @@ You can customize the environment by modifying the Home Manager configuration fi
 
 For example, to customize code-server settings, modify the `vibe-station.code-server.settings` option in `nix/home-manager/profiles/base.nix`.
 
+## Docker Compose Override
+
+To customize the Code Server environment, you can create a `compose.override.yml` file in the root of your project. This file can override or extend the default `compose.yml` file.
+
+For example, you can add a proxy to the code-server container:
+
+```yml
+# Example of adding a proxy to the code-server container
+services:
+  tilt:
+   image: alpine/socat
+   container_name: tilt
+   restart: unless-stopped
+   command: TCP-LISTEN:10350,fork,reuseaddr TCP:code-server:10350
+   ports:
+      - "10350"
+   depends_on:
+      - code-server
+```
+
 ## Examples
 
 - [Golang Example](examples/golang/README.md) - A simple Go HTTP server example that demonstrates how to use Vibe Station with a Go project.
@@ -103,6 +124,12 @@ For example, to customize code-server settings, modify the `vibe-station.code-se
 For more detailed instructions and information, see:
 
 - [Running with Docker](docs/running-with-docker.md) - Comprehensive guide to running Vibe Station with Docker
+
+## Community
+
+Join our Discord community to get help, share your experiences, and connect with other users:
+
+- [Discord Server](https://discord.gg/uc6uSBQtve) - Join the Vibe Station community
 
 ## Notes
 

@@ -1,0 +1,13 @@
+# Example of adding a proxy to the code-server container
+# You can create an compose.override.yml file to extend or override the default compose file
+# Usage copy this file to compose.override.yml and run
+# COMPOSE_FILE=compose.yml:compose.override.yml docker compose up -d
+# tilt:
+#   image: alpine/socat
+#   container_name: tilt
+#   restart: unless-stopped
+#   command: TCP-LISTEN:10350,fork,reuseaddr TCP:code-server:10350
+#   ports:
+#     - "10350"
+#   depends_on:
+#     - code-server

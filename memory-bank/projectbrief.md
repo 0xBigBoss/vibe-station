@@ -2,7 +2,7 @@
 
 ## Core Goal
 
-A Docker-based environment for vibe coding. It leverages Docker and Home Manager to quickly create a Code Server environment pre-configured with an agentic developer, Cline, that can be used with any project without requiring tight VCS integration.
+A Docker-based environment for vibe coding. It leverages Docker and Home Manager to quickly create a Code Server environment pre-configured with an agentic developer experience that can be used with any project without requiring tight VCS integration.
 
 ## Scope
 
