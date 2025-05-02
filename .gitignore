@@ -1,2 +1,4 @@
 # create specific user files without saving them to git
 .clinerules/*user*.md
+compose.override.yml
+.direnv/

@@ -14,7 +14,7 @@ This guide provides step-by-step instructions to run the Vibe Station code-serve
    cd vibe-station
    ```
 
-2. **Build and Start the Container:** Use Docker Compose to build the image defined in `Dockerfile` and start the container(s) defined in `docker-compose.yml`.
+2. **Build and Start the Container:** Use Docker Compose to build the image defined in `Dockerfile` and start the container(s) defined in `compose.yml`.
    ```bash
    # Standard command with output redirection (recommended)
    docker compose up --build -d > docker-build.log 2>&1

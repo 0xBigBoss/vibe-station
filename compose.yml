@@ -3,16 +3,21 @@ services:
     image: 0xbigboss/vibe-station:latest
     platform: linux/amd64
     build: .
-    stop_grace_period: 30s
+    stop_grace_period: 5s
     working_dir: /app
     privileged: true
     command: --bind-addr 0.0.0.0:7080 --auth none --app-name ${CODE_SERVER_APP_NAME:-vibe-station}
     ports:
       - "${HOST_PORT:-}7080"
+    environment:
+      - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
     volumes:
       - ${CODE_SERVER_APP_DIR:-./}:/app
       - nix-data:/nix
       - coder-server-data:/home/coder/.local/share/code-server
+      - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock
+      # Uncomment the following lines to enable Docker support using the host's Docker daemon
+      # - /var/run/docker.sock:/var/run/docker.sock:rw
       - docker-images-data:/var/lib/docker
       - type: tmpfs
         target: /var/run
@@ -28,6 +33,19 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  # Example of adding a proxy to the code-server container
+  # You can create an compose.override.yml file to extend or override the default compose file
+  # Usage COMPOSE_FILE=compose.yml:compose.override.yml docker compose up -d
+  # tilt:
+  #   image: alpine/socat
+  #   container_name: tilt
+  #   restart: unless-stopped
+  #   command: TCP-LISTEN:10350,fork,reuseaddr TCP:code-server:10350
+  #   ports:
+  #     - "10350"
+  #   depends_on:
+  #     - code-server
 
 volumes:
   nix-data:

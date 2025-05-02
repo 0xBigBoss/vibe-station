@@ -25,7 +25,7 @@
    - Make the mount point configurable for different use cases
    - Update relevant scripts and configurations to use this variable
    - Implementation:
-     - Updated docker-compose.yml to use `${APP_DIR:-./}` for working directory and volume mounts
+     - Updated compose.yml to use `${APP_DIR:-./}` for working directory and volume mounts
      - Updated documentation to reflect the changes and provide usage examples
 
 4. ✅ **Code-Server Settings Configuration** (Completed)

@@ -2,7 +2,7 @@ FROM debian:bookworm
 
 # Install dependencies including Docker
 RUN apt update \
-  && apt install -y curl xz-utils sudo apt-transport-https ca-certificates gnupg lsb-release \
+  && apt install -y curl xz-utils sudo apt-transport-https ca-certificates gnupg lsb-release tini \
   && /sbin/useradd -m coder \
   && mkdir -p /home/coder/.local/share/code-server \
   && chown -R coder /home/coder \
@@ -13,6 +13,7 @@ RUN apt update \
   && mkdir -p /etc/sudoers.d \
   && echo "coder ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/coder \
   && chmod 440 /etc/sudoers.d/coder \
+  && usermod -aG root coder \
   # Install Docker
   && install -m 0755 -d /etc/apt/keyrings \
   && curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
@@ -54,5 +55,8 @@ EXPOSE 7080
 COPY --chown=coder:coder entrypoint.sh /home/coder/entrypoint.sh
 RUN sudo chmod +x /home/coder/entrypoint.sh
 
+# Use Tini as the entry point
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
 # Start Docker daemon and then code-server
-ENTRYPOINT ["/home/coder/entrypoint.sh"]
+CMD ["/home/coder/entrypoint.sh"]
