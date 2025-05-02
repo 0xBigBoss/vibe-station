@@ -2,3 +2,5 @@
 .clinerules/*user*.md
 compose.override.yml
 .direnv/
+
+**/.claude/settings.local.json
