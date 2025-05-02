@@ -55,8 +55,8 @@ EXPOSE 7080
 COPY --chown=coder:coder entrypoint.sh /home/coder/entrypoint.sh
 RUN sudo chmod +x /home/coder/entrypoint.sh
 
-# Use Tini as the entry point
-ENTRYPOINT ["/usr/bin/tini", "--"]
+# Use Tini as the entry point with code-server
+ENTRYPOINT ["/usr/bin/tini", "--", "/home/coder/entrypoint.sh"]
 
-# Start Docker daemon and then code-server
-CMD ["/home/coder/entrypoint.sh"]
+# Default arguments for code-server if none provided
+CMD []

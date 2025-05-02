@@ -1,5 +1,26 @@
 #!/bin/bash
 
+# Ensure XDG directories exist with proper permissions
+ensure_xdg_dirs() {
+  echo "Ensuring XDG directories exist with proper permissions..."
+  
+  # Standard XDG Base Directories
+  mkdir -p "${XDG_CONFIG_HOME:-$HOME/.config}"
+  mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}"
+  mkdir -p "${XDG_STATE_HOME:-$HOME/.local/state}"
+  mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}"
+  
+  # Fix any permission issues that might arise from volume mounts
+  sudo chown -R coder:coder "${XDG_CONFIG_HOME:-$HOME/.config}"
+  sudo chown -R coder:coder "${XDG_DATA_HOME:-$HOME/.local/share}"
+  sudo chown -R coder:coder "${XDG_STATE_HOME:-$HOME/.local/state}"
+  sudo chown -R coder:coder "${XDG_CACHE_HOME:-$HOME/.cache}"
+  sudo chown -R coder:coder "$HOME/.nix-profile" 2>/dev/null || true
+}
+
+# Run our setup tasks
+ensure_xdg_dirs
+
 # Check if Docker socket is mounted from host
 if [ -S /var/run/docker.sock ] && docker info >/dev/null 2>&1; then
   echo "Host Docker engine detected at /var/run/docker.sock, skipping local Docker daemon startup"
@@ -22,7 +43,12 @@ else
 fi
 
 # Run code-server and wait for it
-code-server "$@"
+# Check if any arguments were passed
+if [ $# -eq 0 ]; then
+  code-server --bind-addr 0.0.0.0:7080 --auth none --app-name vibe-station
+else
+  code-server "$@"
+fi
 
 # When using host Docker, we don't need to clean up the daemon
 if [ "$USING_HOST_DOCKER" != "true" ]; then

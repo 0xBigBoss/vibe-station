@@ -6,17 +6,25 @@ services:
     stop_grace_period: 5s
     working_dir: /app
     privileged: true
-    command: --bind-addr 0.0.0.0:7080 --auth none --app-name ${CODE_SERVER_APP_NAME:-vibe-station}
     ports:
       - "${HOST_PORT:-}7080"
     environment:
       - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
       - LANG=en_US.UTF-8
       - LC_ALL=en_US.UTF-8
+      # Set XDG environment variables explicitly
+      - XDG_CONFIG_HOME=/home/coder/.config
+      - XDG_DATA_HOME=/home/coder/.local/share
+      - XDG_STATE_HOME=/home/coder/.local/state
+      - XDG_CACHE_HOME=/home/coder/.cache
     volumes:
       - ${CODE_SERVER_APP_DIR:-./}:/app
       - nix-data:/nix
       - coder-server-data:/home/coder/.local/share/code-server
+      - coder-config-data:/home/coder/.config
+      - coder-local-data:/home/coder/.local
+      - coder-cache-data:/home/coder/.cache
+      - coder-nix-profile:/home/coder/.nix-profile
       - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock
       # Uncomment the following lines to enable Docker support using the host's Docker daemon
       # - /var/run/docker.sock:/var/run/docker.sock:rw
@@ -52,4 +60,8 @@ services:
 volumes:
   nix-data:
   coder-server-data:
+  coder-config-data:
+  coder-local-data:
+  coder-cache-data:
+  coder-nix-profile:
   docker-images-data:

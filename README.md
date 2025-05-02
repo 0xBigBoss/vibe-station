@@ -11,6 +11,7 @@ This is an experimental project for quickly prototyping an agentic developer exp
 - code-server pre-installed with agentic developer capabilities
 - Works with any project without requiring tight VCS integration
 - Compose override feature for customizing the Code Server environment
+- Persistent user data across container restarts via Docker volumes
 
 ## Recommended Quickstart
 
@@ -94,6 +95,19 @@ You can customize the environment by modifying the Home Manager configuration fi
 
 For example, to customize code-server settings, modify the `vibe-station.code-server.settings` option in `nix/home-manager/profiles/base.nix`.
 
+## User Data Persistence
+
+Vibe Station ensures that important user data is preserved across container restarts and updates through Docker named volumes:
+
+- **XDG directories**: Configuration (`~/.config`), data (`~/.local`), and cache (`~/.cache`) directories
+- **Nix profile**: User's Nix profile (`~/.nix-profile`)
+- **Code Server data**: Code Server-specific settings and extensions
+- **Docker images**: Container images built or pulled during use
+
+This persistence is especially important for agentic tools and applications that rely on the XDG Base Directory Specification to store their data.
+
+For more details on user data persistence, see [User Data Persistence](docs/user-data-persistence.md).
+
 ## Docker Compose Override
 
 To customize the Code Server environment, you can create a `compose.override.yml` file in the root of your project. This file can override or extend the default `compose.yml` file.
@@ -124,6 +138,7 @@ services:
 For more detailed instructions and information, see:
 
 - [Running with Docker](docs/running-with-docker.md) - Comprehensive guide to running Vibe Station with Docker
+- [Customizing Data Persistence](docs/customizing-data-persistence.md) - Guide for persisting additional directories and customizing data persistence
 
 ## Community
 

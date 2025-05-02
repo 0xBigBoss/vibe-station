@@ -71,10 +71,16 @@ This guide provides step-by-step instructions to run the Vibe Station code-serve
     # Run from your host machine
     docker compose exec code-server bash -c "cd /app/nix/home-manager && home-manager switch --flake .#coder" > home-manager-switch.log 2>&1
     ```
-* The Docker Compose setup includes several volumes for caching:
-  * `nix-store-data`: Caches the Nix store to speed up package installations
+* The Docker Compose setup includes several volumes for data persistence:
+  * `nix-data`: Caches the Nix store to speed up package installations
   * `coder-server-data`: Persists code-server settings and extensions
+  * `coder-config-data`: Persists user configuration files in ~/.config
+  * `coder-local-data`: Persists user data in ~/.local
+  * `coder-cache-data`: Persists user cache in ~/.cache
+  * `coder-nix-profile`: Persists user's Nix profile
   * `docker-images-data`: Caches Docker images when using Docker within the container
+  
+  For information on how to add custom persistent directories, see [Customizing Data Persistence](customizing-data-persistence.md).
 
 ## Customizing code-server Settings
 
