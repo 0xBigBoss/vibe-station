@@ -11,6 +11,8 @@ services:
       - "${HOST_PORT:-}7080"
     environment:
       - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
+      - LANG=en_US.UTF-8
+      - LC_ALL=en_US.UTF-8
     volumes:
       - ${CODE_SERVER_APP_DIR:-./}:/app
       - nix-data:/nix
