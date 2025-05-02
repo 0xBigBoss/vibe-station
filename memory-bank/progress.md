@@ -15,13 +15,17 @@
 * Golang example project demonstrating usage
 * Project template for integration with overlayed profiles
 * Browser access to code-server with folder parameter support
+* Persistent user data across container restarts through Docker volumes:
+  * XDG directories (~/.config, ~/.local, ~/.cache)
+  * Nix profile (~/.nix-profile)
+  * Code Server data
+  * Docker images
 
 ## What's Left to Build
 
 * Continue implementing Docker and Home Manager enhancements:
   * Task 3: Parameterize App Directory
   * Task 4: Code-Server Settings Configuration
-  * Task 5: Documentation Updates
 * Consider adding more examples for other languages/frameworks
 * Fully test the extension installation within a real code-server environment
 * Consider mounting the host's Docker socket as a future optimization
@@ -43,6 +47,11 @@
   * Removed `home-manager` from `nix-env` installation in Dockerfile
   * Kept the declarative management in Home Manager configuration (`programs.home-manager.enable = true;`)
   * Added instructions for initial activation using `nix run` and subsequent activations using `home-manager switch`
+* Implemented comprehensive user data persistence strategy:
+  * Added Docker volumes for all XDG directories (config, data, state, cache)
+  * Added volume for Nix profile persistence
+  * Enhanced entrypoint script to ensure proper initialization of persistent directories
+  * Created comprehensive documentation on data persistence including customization guides
 
 ## Known Issues
 

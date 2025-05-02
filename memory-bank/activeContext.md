@@ -8,6 +8,7 @@
 * Optimized the Docker Compose setup to cache Docker-in-Docker images for better performance
 * Successfully tested the code-server functionality through the browser interface
 * Implemented overlayed profiles in Nix Home Manager to provide a layered approach to managing development environments
+* Implemented comprehensive user data persistence strategy for improved user experience and agent functionality
 
 ## Recent Changes
 
@@ -31,15 +32,21 @@
   * Added a new volume `docker-images-data` to persist Docker images between container restarts
   * Updated the Docker configuration in the base profile to use the mounted volume for storing images
   * Updated documentation to explain the volume caching system
+* Implemented comprehensive user data persistence strategy:
+  * Added Docker volumes for all XDG directories (config, data, state, cache)
+  * Added volume for Nix profile persistence
+  * Enhanced entrypoint script to ensure proper initialization and permissions
+  * Created detailed documentation for data persistence (user-data-persistence.md)
+  * Added guide for customizing data persistence (customizing-data-persistence.md)
 
 ## Next Steps
 
 1. Continue implementing Docker and Home Manager enhancements as outlined in `docs/todo/docker-home-manager-enhancements.md`:
    * ✅ Task 1: Passwordless sudo for coder user - Completed
    * ✅ Task 2: Home Manager switch in Dockerfile - Completed
+   * ✅ Task 5: Update documentation for user data persistence - Completed
    * Task 3: Parameterize the `/app` directory using an ENV variable
    * Task 4: Create a Home Manager option to configure `code-server` settings
-   * Task 5: Update documentation for these changes
 2. Consider adding more examples for other languages/frameworks
 3. Fully test the extension installation within a real code-server environment
 4. Consider mounting the host's Docker socket as a future optimization to allow the container to use the host's Docker daemon instead of running Docker-in-Docker
@@ -55,6 +62,11 @@
   * Project-specific layer for project environments via direnv
 * Decided to optimize Docker-in-Docker performance by adding volume caching for Docker images while maintaining complete isolation of the container, rather than mounting the host's Docker socket which would have been faster but less isolated
 * Decided to manage `home-manager` purely declaratively (`programs.home-manager.enable = true;`) and removed the imperative installation from the Dockerfile to resolve activation conflicts
+* Chosen to implement comprehensive user data persistence through Docker volumes for better user experience and agent functionality:
+  * Using named volumes for all XDG directories following best practices
+  * Adding persistence for Nix profile to maintain installed packages
+  * Enhanced the entrypoint script to properly initialize and set permissions on mounted volumes
+  * Provided extensive documentation for customizing persistence
 
 ## Learnings & Insights
 
@@ -68,3 +80,7 @@
 * Direnv integration with Nix flakes creates a seamless development experience by automatically loading project-specific environments
 * Docker volume caching provides significant performance benefits for Docker-in-Docker operations
 * Installing `home-manager` both imperatively and declaratively causes conflicts during `home-manager switch`. The solution is to rely solely on declarative management and use `nix run` for the initial activation if the command isn't in the PATH
+* Following the XDG Base Directory Specification is crucial for proper functioning of agentic tools and extensions that rely on configuration persistence
+* Docker named volumes provide a clean, reliable mechanism for data persistence between container rebuilds without requiring bind mounts from the host
+* Setting proper permissions on volume-mounted directories is essential for container security and functionality
+* Providing comprehensive customization documentation encourages users to extend the system in a standardized way

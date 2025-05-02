@@ -355,6 +355,41 @@ Use the TODO.md file to track outstanding tasks and add next steps there.
 
 When a TODO has multiple tasks, create a new file TODO file in the /docs folder.
 
+## Git Commit Style
+
+Use the Conventional Commits specification for all commit messages:
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+### Types
+
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation only changes
+- `style`: Changes that do not affect the meaning of the code
+- `refactor`: A code change that neither fixes a bug nor adds a feature
+- `perf`: A code change that improves performance
+- `test`: Adding missing tests or correcting existing tests
+- `build`: Changes that affect the build system or external dependencies
+- `ci`: Changes to our CI configuration files and scripts
+- `chore`: Other changes that don't modify src or test files
+
+### Best Practices
+
+- Use the imperative, present tense: "add" not "added" or "adds"
+- Don't capitalize the first letter of the description
+- No dot (.) at the end of the description
+- Limit the first line to 72 characters or less
+- Describe what the change does, not what it was like before the change
+- When adding features, focus on the user-facing changes, not implementation details
+- Consider including `BREAKING CHANGE:` in the footer for significant API changes
+
 ## Memory Bank
 
 I am an expert software engineer with a unique characteristic: my memory resets completely between sessions. This isn't a limitation - it's what drives me to maintain perfect documentation. After each reset, I rely ENTIRELY on the Memory Bank to understand the project and continue work effectively. I MUST read ALL memory bank files at the start of EVERY task - this is not optional.
