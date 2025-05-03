@@ -30,7 +30,33 @@ This guide provides step-by-step instructions to run the Vibe Station code-serve
    * `--quiet-pull`: Reduces the output when pulling images.
    * `APP_DIR`: Optional environment variable to customize the host app directory for mounting into the container.
 
-3. **Access code-server:** Once the container is running, you should be able to access the code-server interface.
+3. **Streamlined Setup with direnv (Optional):** For a more convenient workflow, especially when using Vibe Station with your own projects, you can set up a `.envrc` file to automatically configure the environment when you enter the project directory.
+
+   Create a `.envrc` file in your project's root directory:
+   ```bash
+   # VIBE STATION BEGIN
+   app_dir="$(pwd)"
+   export COMPOSE_FILE=$app_dir/.vibe-station/compose.yml:$app_dir/.vibe-station/compose.override.yml
+   # Set these to your project name - customize as needed
+   export COMPOSE_PROJECT_NAME=your_project_name
+   export CODE_SERVER_APP_NAME=your_project_name
+   export CODE_SERVER_APP_DIR=$app_dir
+   # VIBE STATION END
+   ```
+
+   If you have direnv installed, allow the configuration:
+   ```bash
+   direnv allow
+   ```
+
+   Benefits of this approach:
+   * Automatically configures Docker Compose environment when you enter your project directory
+   * Simplifies commands (just `docker compose up -d` instead of specifying file paths)
+   * Enables use of a compose override file for project-specific customizations
+   * Sets consistent container naming based on your project
+   * Makes it easier to run multiple vibe stations for different projects
+
+4. **Access code-server:** Once the container is running, you should be able to access the code-server interface.
    * Open your browser and navigate to `http://localhost:7080`
    * If this is your first time, you'll need to create a password or authenticate
    * Follow the on-screen instructions to complete the setup
@@ -40,7 +66,7 @@ This guide provides step-by-step instructions to run the Vibe Station code-serve
      http://localhost:7080/?folder=/app/examples/golang
      ```
 
-4. **Stopping the Workspace:** To stop the running containers:
+5. **Stopping the Workspace:** To stop the running containers:
    ```bash
    docker compose down
    ```

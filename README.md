@@ -30,6 +30,52 @@ docker compose ps
 
 Now you can access the code-server interface at `http://localhost:7080` or the random port assigned by docker compose, `docker compose ps` and use that port.
 
+## Streamlined Setup with direnv (Optional)
+
+You can simplify the setup and management of your vibe station environment by using direnv and a custom `.envrc` file. This approach provides several benefits:
+
+1. Automatically loads environment variables when you enter the project directory
+2. Customizes the docker compose environment for your specific project
+3. Makes starting and stopping the vibe station easier with shorter commands
+4. Provides consistent naming for easier container management
+
+Create a `.envrc` file in your project root with the following content:
+
+```bash
+# VIBE STATION BEGIN
+app_dir="$(pwd)"
+export COMPOSE_FILE=$app_dir/.vibe-station/compose.yml:$app_dir/.vibe-station/compose.override.yml
+# Set these to your project name - customize as needed
+export COMPOSE_PROJECT_NAME=your_project_name
+export CODE_SERVER_APP_NAME=your_project_name
+export CODE_SERVER_APP_DIR=$app_dir
+# VIBE STATION END
+```
+
+If you have direnv installed, allow the configuration:
+
+```bash
+direnv allow
+```
+
+With this setup, you can start and stop your vibe station with simple commands:
+
+```bash
+# Start vibe station
+docker compose up -d
+
+# Check status
+docker compose ps
+
+# Stop vibe station
+docker compose down
+```
+
+The `.envrc` file automatically:
+- Sets up the compose file paths (including the override file if it exists)
+- Configures a consistent project name for easier container management
+- Sets the application directory to your current project
+
 ## Getting Started with Docker
 
 ### Prerequisites
