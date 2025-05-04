@@ -203,6 +203,19 @@ nix-shell -p package --run "command" > output.log 2>&1
 
 ## Testing
 
+### IMPORTANT: Always Test Before Committing
+
+NEVER commit or push code without testing it first. This is a critical rule that must always be followed:
+
+1. **All code changes must be thoroughly tested** before committing
+2. Test the code in conditions that match how users will use it
+3. For changes to vibe-station components, test in a Docker container using the project's Docker setup
+4. Verify all features work as expected, especially for complex integrations
+5. Document the testing process and results
+6. If the test fails, fix the issues before committing
+
+### Testing Environment
+
 Assume we are on MacOS and have docker installed for now.
 
 Be sure the nix code we are writing works by testing it in docker containers.
