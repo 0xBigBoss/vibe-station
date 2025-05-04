@@ -16,6 +16,16 @@ ensure_xdg_dirs() {
   sudo chown -R coder:coder "${XDG_STATE_HOME:-$HOME/.local/state}"
   sudo chown -R coder:coder "${XDG_CACHE_HOME:-$HOME/.cache}"
   sudo chown -R coder:coder "$HOME/.nix-profile" 2>/dev/null || true
+  
+  # Set up command history persistence
+  if [ -d "/commandhistory" ]; then
+    echo "Setting up shell history persistence..."
+    sudo mkdir -p /commandhistory
+    sudo chown -R coder:coder /commandhistory
+    sudo chmod 700 /commandhistory
+    touch /commandhistory/.zsh_history 2>/dev/null || true
+    chmod 600 /commandhistory/.zsh_history 2>/dev/null || true
+  fi
 }
 
 # Run our setup tasks

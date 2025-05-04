@@ -83,9 +83,34 @@
         grep = "grep --color=auto";
         # Add more useful aliases
       };
-      # initExtra = ''
-      #   # Custom Zsh settings can go here
-      # '';
+      initExtra = ''
+        # Shell history persistence settings
+        # Use /commandhistory volume for persistent history across container restarts
+        
+        # Ensure the directory exists
+        if [ ! -d "/commandhistory" ]; then
+          sudo mkdir -p /commandhistory
+          sudo chown coder:coder /commandhistory
+          sudo chmod 700 /commandhistory
+        fi
+        
+        # Set history file to the volume
+        export HISTFILE=/commandhistory/.zsh_history
+        touch $HISTFILE
+        chmod 600 $HISTFILE
+        
+        # Extensive history configuration
+        HISTSIZE=10000
+        SAVEHIST=10000
+        setopt INC_APPEND_HISTORY    # Add commands to history as they are executed
+        setopt SHARE_HISTORY         # Share history between all sessions
+        setopt EXTENDED_HISTORY      # Save command timestamp
+        setopt HIST_EXPIRE_DUPS_FIRST  # Expire duplicate entries first
+        setopt HIST_IGNORE_DUPS      # Don't record an entry if it's a duplicate
+        setopt HIST_FIND_NO_DUPS     # Don't show duplicates in search
+        setopt HIST_IGNORE_SPACE     # Don't record entries starting with a space
+        setopt HIST_SAVE_NO_DUPS     # Don't write duplicate entries
+      '';
     };
 
     # Direnv Configuration (for project-specific environments)

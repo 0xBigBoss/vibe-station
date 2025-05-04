@@ -17,6 +17,8 @@ services:
       - XDG_DATA_HOME=/home/coder/.local/share
       - XDG_STATE_HOME=/home/coder/.local/state
       - XDG_CACHE_HOME=/home/coder/.cache
+      # Set ZSH history file location for persistence
+      - HISTFILE=/commandhistory/.zsh_history
     volumes:
       - ${CODE_SERVER_APP_DIR:-./}:/app
       - nix-data:/nix
@@ -25,6 +27,7 @@ services:
       - coder-local-data:/home/coder/.local
       - coder-cache-data:/home/coder/.cache
       - coder-nix-profile:/home/coder/.nix-profile
+      - commandhistory:/commandhistory
       - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock
       # Uncomment the following lines to enable Docker support using the host's Docker daemon
       # - /var/run/docker.sock:/var/run/docker.sock:rw
@@ -65,3 +68,4 @@ volumes:
   coder-cache-data:
   coder-nix-profile:
   docker-images-data:
+  commandhistory:
