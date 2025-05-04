@@ -2,6 +2,20 @@
 # You can create an compose.override.yml file to extend or override the default compose file
 # Usage copy this file to compose.override.yml and run
 # COMPOSE_FILE=compose.yml:compose.override.yml docker compose up -d
+
+# Example: Persist Claude Code settings across container restarts
+# code-server:
+#   environment:
+#     # Set custom directory for Claude Code configuration
+#     - CLAUDE_CONFIG_DIR=/home/coder/.config/claude-code
+#   volumes:
+#     # Persist Claude Code settings in a named volume
+#     - claude-code-config:/home/coder/.config/claude-code
+
+# volumes:
+#   claude-code-config:
+#     name: claude-code-config
+
 # tilt:
 #   image: alpine/socat
 #   container_name: tilt
