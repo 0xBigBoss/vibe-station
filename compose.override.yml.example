@@ -18,7 +18,6 @@
 #   # Example: Add a proxy to the code-server container
 #   tilt:
 #     image: alpine/socat
-#     container_name: tilt
 #     restart: unless-stopped
 #     command: TCP-LISTEN:10350,fork,reuseaddr TCP:code-server:10350
 #     ports:
