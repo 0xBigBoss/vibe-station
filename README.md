@@ -23,7 +23,7 @@ git clone https://github.com/0xbigboss/vibe-station.git .vibe-station
 # Ignore the .vibe-station directory in your project
 echo ".vibe-station" >> .git/info/exclude
 # Run the vibe-station docker-compose command
-docker compose up -d -f .vibe-station/compose.yml
+docker compose -f .vibe-station/compose.yml up -d
 # Find the random port assigned by docker compose. Use `HOST_PORT` environment variable to specify a custom port.
 docker compose ps
 ```
