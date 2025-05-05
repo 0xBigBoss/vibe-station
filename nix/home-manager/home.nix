@@ -9,6 +9,8 @@
   imports = [
     ./profiles/base.nix
     ./profiles/personal.nix
+    # Claude Code profile is available but not imported by default
+    # Users can enable it with a custom configuration file
     # Add other profiles like ./profiles/work.nix here if needed
   ];
 

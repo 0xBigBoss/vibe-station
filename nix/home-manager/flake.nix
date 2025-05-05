@@ -38,6 +38,10 @@
           # The core modules for this configuration
           modules = [
             ./home.nix
+            # Support for loading custom configuration via -I flag
+            ({ lib, ... }: {
+              imports = lib.optional (builtins.pathExists ./custom-config) ./custom-config;
+            })
             # Potentially add host-specific modules here later
           ];
           # Optional extra arguments passed to modules
@@ -78,6 +82,12 @@
       personal = {pkgs, ...}: {
         imports = [
           ./profiles/personal.nix
+        ];
+      };
+      
+      claude-code = {pkgs, ...}: {
+        imports = [
+          ./profiles/claude-code.nix
         ];
       };
     };

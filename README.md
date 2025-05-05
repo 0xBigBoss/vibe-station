@@ -179,6 +179,12 @@ services:
 - [Golang Example](examples/golang/README.md) - A simple Go HTTP server example that demonstrates how to use Vibe Station with a Go project.
 - [Home Manager Overlayed Profiles](nix/home-manager/README.md) - A complete Home Manager configuration with overlayed profiles for managing your development environment.
 
+## Extensions
+
+Vibe Station supports optional extensions that can be enabled without modifying the base repository:
+
+- [Claude Code](docs/extensions/claude-code.md) - AI-powered coding assistant from Anthropic ([example config](examples/claude-code-config.nix))
+
 ## Documentation
 
 For more detailed instructions and information, see:
