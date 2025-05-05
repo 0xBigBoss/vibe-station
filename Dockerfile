@@ -2,7 +2,7 @@ FROM debian:bookworm
 
 # Install dependencies including Docker
 RUN apt update \
-  && apt install -y curl xz-utils sudo apt-transport-https ca-certificates gnupg lsb-release tini \
+  && apt install -y curl xz-utils sudo apt-transport-https ca-certificates gnupg lsb-release tini locales \
   && /sbin/useradd -m coder \
   && mkdir -p /home/coder/.local/share/code-server \
   && chown -R coder /home/coder \
@@ -14,6 +14,9 @@ RUN apt update \
   && echo "coder ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/coder \
   && chmod 440 /etc/sudoers.d/coder \
   && usermod -aG root coder \
+  # Generate and set locales
+  && sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen \
+  && locale-gen \
   # Install Docker
   && install -m 0755 -d /etc/apt/keyrings \
   && curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
@@ -32,6 +35,9 @@ RUN apt update \
 USER coder
 ENV USER=coder
 ENV PATH="/home/coder/.nix-profile/bin:${PATH}"
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
 RUN curl -sL https://nixos.org/nix/install | sh -s -- --no-daemon
 
 # Enable experimental features and custom options in the container's nix.conf

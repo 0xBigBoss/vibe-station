@@ -349,6 +349,42 @@ The context window is a limited resource. Docker and Nix commands can produce th
 
 Remember: Filling the context window with build output prevents effective communication and problem-solving. When in doubt, redirect output to a log file.
 
+### Test Scripts for Docker
+
+When creating scripts to test Docker functionality:
+
+1. **ALWAYS** place test scripts in the `/test/docker` directory
+2. **FOLLOW** these naming conventions:
+   - Use descriptive names that indicate what is being tested (e.g., `test-locale-fix.sh`)
+   - Prefix with `test-` for all test scripts
+   - Use the `.sh` extension for shell scripts
+3. **ENSURE** all scripts capture output to log files
+4. **MAKE** scripts executable with `chmod +x`
+5. **INCLUDE** cleanup commands to remove containers and volumes after testing is complete
+6. **DOCUMENT** the purpose of each test script at the top of the file
+
+Example structure for a test script:
+
+```bash
+#!/bin/bash
+# Test script for [specific functionality]
+
+# Description of what this test does
+echo "Starting test for [functionality]..."
+
+# Build/start container with output redirection
+docker compose up --build -d --quiet-pull > build-log.txt 2>&1
+
+# Run test commands and capture output
+docker compose exec container_name test_command > test-output.log 2>&1
+
+# Display minimal results
+echo "Test completed. Check log files for results."
+
+# Optional cleanup
+# docker compose down
+```
+
 ## Documentation
 
 Documentation is a critical component of software development.
