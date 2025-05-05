@@ -66,6 +66,24 @@
 
       # Add other essential command-line tools here
     ];
+    
+    # --- Vibe Station Bin Directory ---
+    # Create a bin directory for vibe station scripts and executables
+    home.sessionPath = [ "$HOME/.vibe-station/bin" ];
+    
+    # Ensure the ~/.vibe-station/bin directory exists
+    home.file.".vibe-station/bin/.keep".text = "";
+    
+    # Create the claude script directly in the home directory
+    home.file.".vibe-station/bin/claude" = {
+      text = ''
+        #!/usr/bin/env nix-shell
+        #! nix-shell -p nodejs_22 -i sh
+        # shellcheck shell=sh
+        npx @anthropic-ai/claude-code "$@"
+      '';
+      executable = true;
+    };
 
     # --- Program Configurations ---
 

@@ -185,6 +185,7 @@ For more detailed instructions and information, see:
 
 - [Running with Docker](docs/running-with-docker.md) - Comprehensive guide to running Vibe Station with Docker
 - [Customizing Data Persistence](docs/customizing-data-persistence.md) - Guide for persisting additional directories and customizing data persistence
+- [Vibe Station Bin Directory](docs/vibe-station-bin-directory.md) - Information about the bin directory for executable scripts
 
 ## Community
 
