@@ -36,6 +36,7 @@
     # --- Personal Shell Customizations ---
     programs.zsh = {
       syntaxHighlighting.enable = true;
+      autosuggestion.enable = true;
 
       # Assuming zsh is enabled in base.nix
       # Add personal aliases or functions here

@@ -80,6 +80,8 @@
         #!/usr/bin/env nix-shell
         #! nix-shell -p nodejs_22 -i sh
         # shellcheck shell=sh
+        mkdir -p ~/.config/local/claude
+        export CLAUDE_CONFIG_DIR=~/.config/local/claude
         npx @anthropic-ai/claude-code "$@"
       '';
       executable = true;
@@ -101,7 +103,7 @@
         grep = "grep --color=auto";
         # Add more useful aliases
       };
-      initExtra = ''
+      initContent = ''
         # Shell history persistence settings
         # Use /commandhistory volume for persistent history across container restarts
         
@@ -130,6 +132,8 @@
         setopt HIST_SAVE_NO_DUPS     # Don't write duplicate entries
       '';
     };
+
+    programs.fzf.enable = true;
 
     # Direnv Configuration (for project-specific environments)
     programs.direnv = {
