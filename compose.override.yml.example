@@ -8,6 +8,9 @@
 # services:
 #   # Example: Persist Claude Code settings across container restarts
 #   code-server:
+#     # use OrbStack automatic SSL on port 7080
+#     labels:
+#       - dev.orbstack.http-port=7080
 #     environment:
 #       # Set custom directory for Claude Code configuration
 #       - CLAUDE_CONFIG_DIR=/home/coder/.config/claude-code

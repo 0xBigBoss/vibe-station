@@ -5,9 +5,9 @@ services:
     build: .
     stop_grace_period: 5s
     working_dir: /app
-    privileged: true
     ports:
-      - "${HOST_PORT:-}7080"
+      - '${HOST_PORT:-}7080'
+    privileged: true
     environment:
       - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
       - LANG=en_US.UTF-8
@@ -29,36 +29,13 @@ services:
       - coder-nix-profile:/home/coder/.nix-profile
       - commandhistory:/commandhistory
       - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock
-      # Uncomment the following lines to enable Docker support using the host's Docker daemon
-      # - /var/run/docker.sock:/var/run/docker.sock:rw
-      - docker-images-data:/var/lib/docker
-      - type: tmpfs
-        target: /var/run
+      - docker-data:/var/lib/docker
     healthcheck:
-      test:
-        [
-          "CMD",
-          "bash",
-          "-c",
-          "curl -f http://localhost:7080 || exit 1 && docker info || exit 1",
-        ]
+      test: ['CMD', 'bash', '-c', 'curl -f http://localhost:7080 || exit 1']
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
-
-  # Example of adding a proxy to the code-server container
-  # You can create an compose.override.yml file to extend or override the default compose file
-  # Usage COMPOSE_FILE=compose.yml:compose.override.yml docker compose up -d
-  # tilt:
-  #   image: alpine/socat
-  #   container_name: tilt
-  #   restart: unless-stopped
-  #   command: TCP-LISTEN:10350,fork,reuseaddr TCP:code-server:10350
-  #   ports:
-  #     - "10350"
-  #   depends_on:
-  #     - code-server
+      start_period: 60s
 
 volumes:
   nix-data:
@@ -67,5 +44,5 @@ volumes:
   coder-local-data:
   coder-cache-data:
   coder-nix-profile:
-  docker-images-data:
+  docker-data:
   commandhistory:

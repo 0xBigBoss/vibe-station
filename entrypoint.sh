@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Ensure XDG directories exist with proper permissions
 ensure_xdg_dirs() {
@@ -28,29 +29,67 @@ ensure_xdg_dirs() {
   fi
 }
 
+# Start Docker daemon
+start_docker() {
+  echo "Starting Docker daemon with resource limits support..."
+  
+  # Ensure docker data directory exists
+  sudo mkdir -p /var/lib/docker
+  sudo chown -R root:root /var/lib/docker
+  
+  # Clean up any existing docker socket
+  sudo rm -f /var/run/docker.sock
+  
+  # Stop any existing Docker service if running
+  if systemctl is-active --quiet docker 2>/dev/null; then
+    echo "Docker service is already running, stopping it first..."
+    sudo systemctl stop docker containerd
+  fi
+  
+  # Start Docker daemon using official Docker-in-Docker approach
+  echo "Starting Docker daemon using official Docker-in-Docker approach..."
+  DOCKER_LOG_FILE="/var/log/dockerd.log"
+  sudo /usr/local/bin/dockerd-entrypoint.sh > $DOCKER_LOG_FILE 2>&1 &
+  DOCKER_PID=$!
+  
+  # Wait for Docker to become available
+  echo "Waiting for Docker daemon to start..."
+  max_attempts=30
+  attempt=1
+  
+  while [ $attempt -le $max_attempts ]; do
+    if sudo chmod 666 /var/run/docker.sock 2>/dev/null && docker info > /dev/null 2>&1; then
+      echo "Successfully started Docker daemon"
+      return 0
+    fi
+    
+    # Check if dockerd process is still running
+    if ! kill -0 $DOCKER_PID 2>/dev/null; then
+      echo "ERROR: Docker daemon process died unexpectedly"
+      echo "--- Last 50 lines of Docker daemon log ---"
+      tail -n 50 $DOCKER_LOG_FILE
+      return 1
+    fi
+    
+    echo "Attempt $attempt/$max_attempts: Docker daemon not available yet, waiting..."
+    attempt=$((attempt + 1))
+    sleep 2
+  done
+  
+  echo "ERROR: Failed to start Docker daemon after $max_attempts attempts"
+  echo "--- Last 50 lines of Docker daemon log ---"
+  tail -n 50 $DOCKER_LOG_FILE
+  return 1
+}
+
 # Run our setup tasks
 ensure_xdg_dirs
 
-# Check if Docker socket is mounted from host
-if [ -S /var/run/docker.sock ] && docker info >/dev/null 2>&1; then
-  echo "Host Docker engine detected at /var/run/docker.sock, skipping local Docker daemon startup"
-  USING_HOST_DOCKER=true
-else
-  echo "No host Docker engine detected, starting local Docker daemon..."
-  sudo dockerd &
-  DOCKER_PID=$!
-
-  # Function to handle shutdown of Docker daemon
-  stop_docker() {
-    echo "Shutting down Docker daemon..."
-    sudo kill -TERM "$DOCKER_PID"
-    wait "$DOCKER_PID"
-    echo "Docker daemon stopped"
-  }
-
-  # Register the cleanup function to run at script exit
-  trap stop_docker EXIT SIGINT SIGTERM
-fi
+# Start Docker daemon with retries and better error handling
+start_docker || {
+  echo "ERROR: Failed to start Docker daemon during container initialization"
+  exit 1
+}
 
 # Run code-server and wait for it
 # Check if any arguments were passed
@@ -58,11 +97,4 @@ if [ $# -eq 0 ]; then
   code-server --bind-addr 0.0.0.0:7080 --auth none --app-name vibe-station
 else
   code-server "$@"
-fi
-
-# When using host Docker, we don't need to clean up the daemon
-if [ "$USING_HOST_DOCKER" != "true" ]; then
-  # When code-server exits, the script will continue
-  # and the EXIT trap will run, cleaning up Docker
-  echo "Exiting..."
 fi
