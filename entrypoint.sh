@@ -49,6 +49,9 @@ start_docker() {
   # Start Docker daemon using official Docker-in-Docker approach
   echo "Starting Docker daemon using official Docker-in-Docker approach..."
   DOCKER_LOG_FILE="/var/log/dockerd.log"
+  # Create log file with correct permissions
+  sudo touch $DOCKER_LOG_FILE
+  sudo chown coder:coder $DOCKER_LOG_FILE
   sudo /usr/local/bin/dockerd-entrypoint.sh > $DOCKER_LOG_FILE 2>&1 &
   DOCKER_PID=$!
   
