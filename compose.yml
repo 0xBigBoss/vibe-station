@@ -7,7 +7,6 @@ services:
     working_dir: /app
     ports:
       - '${HOST_PORT:-}7080'
-    privileged: true
     environment:
       - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
       - LANG=en_US.UTF-8
@@ -29,7 +28,7 @@ services:
       - coder-nix-profile:/home/coder/.nix-profile
       - commandhistory:/commandhistory
       - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock
-      - docker-data:/var/lib/docker
+      - /var/run/docker.sock:/var/run/docker.sock
     healthcheck:
       test: ['CMD', 'bash', '-c', 'curl -f http://localhost:7080 || exit 1']
       interval: 30s
@@ -44,5 +43,4 @@ volumes:
   coder-local-data:
   coder-cache-data:
   coder-nix-profile:
-  docker-data:
   commandhistory:

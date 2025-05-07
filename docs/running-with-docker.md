@@ -80,6 +80,7 @@ This guide provides step-by-step instructions to run the Vibe Station code-serve
 ## Notes
 
 * This setup uses a Debian-based Docker image with Nix installed in single-user mode, allowing you to run as a non-root user while still having full Nix functionality.
+* **Host Docker Integration:** The container uses the host Docker engine for improved performance and resource efficiency. See [Host Docker Socket](host-docker-socket.md) for details.
 * The `coder` user has passwordless sudo privileges configured in the Dockerfile.
 * The app directory is configurable via the `APP_DIR` environment variable on the host, allowing you to mount a project inside the container. This is useful for:
   * Mounting the project to develop within the container
@@ -104,7 +105,7 @@ This guide provides step-by-step instructions to run the Vibe Station code-serve
   * `coder-local-data`: Persists user data in ~/.local
   * `coder-cache-data`: Persists user cache in ~/.cache
   * `coder-nix-profile`: Persists user's Nix profile
-  * `docker-images-data`: Caches Docker images when using Docker within the container
+  * `commandhistory`: Persists command history across container restarts
   
   For information on how to add custom persistent directories, see [Customizing Data Persistence](customizing-data-persistence.md).
 

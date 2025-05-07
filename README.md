@@ -7,6 +7,7 @@ This is an experimental project for quickly prototyping an agentic developer exp
 ## Features
 
 - Docker-based setup for easy deployment and consistent environment
+- Uses host Docker engine for optimal performance
 - Home Manager configuration for declarative environment management
 - code-server pre-installed with agentic developer capabilities
 - Works with any project without requiring tight VCS integration
@@ -81,6 +82,17 @@ The `.envrc` file automatically:
 ### Prerequisites
 
 1. **Docker and Docker Compose:** Ensure you have Docker and Docker Compose installed and running on your system. Refer to the official Docker documentation for installation instructions.
+
+### Docker Architecture
+
+Vibe Station now uses the host Docker engine directly instead of running Docker inside Docker (DinD). This approach:
+
+- Improves performance by eliminating nested virtualization overhead
+- Reduces resource usage and complexity
+- Allows containers started within Vibe Station to run directly on the host
+- Shares the Docker cache with the host system
+
+The container mounts the host's Docker socket (`/var/run/docker.sock`), allowing the Docker CLI inside the container to communicate with the Docker daemon running on the host.
 
 ### Running Vibe Station
 

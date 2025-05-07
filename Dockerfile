@@ -1,6 +1,6 @@
 FROM debian:bookworm
 
-# Install dependencies required for Docker and other tools
+# Install dependencies required for development tools
 RUN apt update \
   && apt install -y \
      curl \
@@ -12,19 +12,7 @@ RUN apt update \
      lsb-release \
      tini \
      locales \
-     iptables \
-     iptables-persistent \
-     btrfs-progs \
-     openssl \
-     kmod \
-     pigz \
      procps \
-     e2fsprogs \
-     xfsprogs \
-     # These packages are needed for systemd cgroup support
-     systemd \
-     dbus-user-session \
-     cgroupfs-mount \
   && /sbin/useradd -m coder \
   && mkdir -p /home/coder/.local/share/code-server \
   && chown -R coder /home/coder \
@@ -39,24 +27,14 @@ RUN apt update \
   # Generate and set locales
   && sed -i 's/^# *\(en_US.UTF-8\)/\1/' /etc/locale.gen \
   && locale-gen \
-  # Install Docker packages (full installation)
+  # Install Docker CLI only (will use host Docker engine)
   && install -m 0755 -d /etc/apt/keyrings \
   && curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg \
   && chmod a+r /etc/apt/keyrings/docker.gpg \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
   && apt update \
-  && apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin \
-  && apt clean \
-  # Create /var/lib/docker directory for Docker storage
-  && mkdir -p /var/lib/docker \
-  # Set up iptables alternatives to ensure docker works correctly
-  && update-alternatives --set iptables /usr/sbin/iptables-legacy \
-  && update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy \
-  # Add coder user to the docker group for permissions (docker group is created by docker-ce package)
-  && usermod -aG docker coder \
-  # Create Docker config directory and default daemon.json
-  && mkdir -p /etc/docker \
-  && echo '{"cgroup-parent": "/docker", "storage-driver": "overlay2", "log-driver": "json-file", "log-opts": {"max-size": "10m", "max-file": "3"}}' > /etc/docker/daemon.json
+  && apt install -y docker-ce-cli docker-compose-plugin \
+  && apt clean
 
 USER coder
 ENV USER=coder
@@ -83,13 +61,9 @@ WORKDIR /app
 # Expose port 7080 for code-server
 EXPOSE 7080
 
-# Copy entrypoint scripts
+# Copy entrypoint script
 COPY --chown=coder:coder entrypoint.sh /home/coder/entrypoint.sh
-COPY dockerd-entrypoint.sh /usr/local/bin/dockerd-entrypoint.sh
-COPY dind /usr/local/bin/dind
-RUN sudo chmod +x /home/coder/entrypoint.sh \
-    && sudo chmod +x /usr/local/bin/dockerd-entrypoint.sh \
-    && sudo chmod +x /usr/local/bin/dind
+RUN sudo chmod +x /home/coder/entrypoint.sh
 
 # Use Tini as the entry point with code-server
 ENTRYPOINT ["/usr/bin/tini", "--", "/home/coder/entrypoint.sh"]

@@ -17,6 +17,8 @@
 #     volumes:
 #       # Persist Claude Code settings in a named volume
 #       - claude-code-config:/home/coder/.config/claude-code
+#       # Docker socket path for Linux if different from Mac/Windows
+#       # - /var/run/docker.sock:/var/run/docker.sock
 #
 #   # Example: Add a proxy to the code-server container
 #   tilt:
