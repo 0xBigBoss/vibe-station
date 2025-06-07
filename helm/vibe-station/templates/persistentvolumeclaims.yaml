@@ -1,0 +1,75 @@
+{{- if .Values.persistence.nixStore.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "vibe-station.fullname" . }}-nix-store
+  labels:
+    {{- include "vibe-station.labels" . | nindent 4 }}
+    app.kubernetes.io/component: nix-store
+spec:
+  accessModes:
+    - {{ .Values.persistence.nixStore.accessMode }}
+  {{- if .Values.persistence.nixStore.storageClass }}
+  storageClassName: {{ .Values.persistence.nixStore.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.nixStore.size }}
+---
+{{- end }}
+{{- if .Values.persistence.codeServerData.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "vibe-station.fullname" . }}-code-server-data
+  labels:
+    {{- include "vibe-station.labels" . | nindent 4 }}
+    app.kubernetes.io/component: code-server-data
+spec:
+  accessModes:
+    - {{ .Values.persistence.codeServerData.accessMode }}
+  {{- if .Values.persistence.codeServerData.storageClass }}
+  storageClassName: {{ .Values.persistence.codeServerData.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.codeServerData.size }}
+---
+{{- end }}
+{{- if and .Values.persistence.dockerImages.enabled .Values.vibeStation.docker.enabled (not .Values.vibeStation.docker.useHostDocker) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "vibe-station.fullname" . }}-docker-images
+  labels:
+    {{- include "vibe-station.labels" . | nindent 4 }}
+    app.kubernetes.io/component: docker-images
+spec:
+  accessModes:
+    - {{ .Values.persistence.dockerImages.accessMode }}
+  {{- if .Values.persistence.dockerImages.storageClass }}
+  storageClassName: {{ .Values.persistence.dockerImages.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.dockerImages.size }}
+---
+{{- end }}
+{{- if .Values.persistence.appData.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "vibe-station.fullname" . }}-app-data
+  labels:
+    {{- include "vibe-station.labels" . | nindent 4 }}
+    app.kubernetes.io/component: app-data
+spec:
+  accessModes:
+    - {{ .Values.persistence.appData.accessMode }}
+  {{- if .Values.persistence.appData.storageClass }}
+  storageClassName: {{ .Values.persistence.appData.storageClass }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.appData.size }}
+{{- end }}

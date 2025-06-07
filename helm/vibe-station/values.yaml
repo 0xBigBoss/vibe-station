@@ -1,0 +1,152 @@
+# Default values for vibe-station.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/0xbigboss/vibe-station
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  # Vibe Station requires privileged access for Docker-in-Docker
+  privileged: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 7080
+  targetPort: 7080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: vibe-station.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  #  - secretName: vibe-station-tls
+  #    hosts:
+  #      - vibe-station.local
+
+resources:
+  limits:
+    cpu: 2000m
+    memory: 4Gi
+  requests:
+    cpu: 500m
+    memory: 1Gi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Vibe Station specific configuration
+vibeStation:
+  # Code Server configuration
+  codeServer:
+    appName: "vibe-station"
+    auth: "none"
+    bindAddr: "0.0.0.0:7080"
+  
+  # Environment variables
+  environment:
+    LANG: "en_US.UTF-8"
+    LC_ALL: "en_US.UTF-8"
+  
+  # SSH configuration
+  ssh:
+    # Set to true to enable SSH auth sock mounting
+    enableAuthSock: false
+    # Path to SSH auth sock on host (only used if enableAuthSock is true)
+    authSockPath: "/run/host-services/ssh-auth.sock"
+  
+  # Docker configuration
+  docker:
+    # Enable Docker-in-Docker
+    enabled: true
+    # Use host Docker daemon instead of DinD (requires mounting host Docker socket)
+    useHostDocker: false
+    # Host Docker socket path (only used if useHostDocker is true)
+    hostDockerSocket: "/var/run/docker.sock"
+
+# Persistent storage configuration
+persistence:
+  # Nix store persistence
+  nixStore:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    size: 10Gi
+  
+  # Code Server data persistence
+  codeServerData:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    size: 5Gi
+  
+  # Docker images persistence (for DinD)
+  dockerImages:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    size: 20Gi
+  
+  # Application data persistence
+  appData:
+    enabled: false
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    size: 10Gi
+    # Existing PVC name (if you want to use an existing PVC)
+    existingClaim: ""
+
+# Health check configuration
+healthcheck:
+  enabled: true
+  initialDelaySeconds: 40
+  periodSeconds: 30
+  timeoutSeconds: 10
+  successThreshold: 1
+  failureThreshold: 3
+
+# Pod disruption budget
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+  # maxUnavailable: 1

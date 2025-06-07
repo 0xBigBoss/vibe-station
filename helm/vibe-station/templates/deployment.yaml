@@ -1,0 +1,164 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "vibe-station.fullname" . }}
+  labels:
+    {{- include "vibe-station.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "vibe-station.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "vibe-station.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "vibe-station.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - "/usr/bin/tini"
+            - "--"
+            - "/home/coder/entrypoint.sh"
+          args:
+            - "--bind-addr"
+            - "{{ .Values.vibeStation.codeServer.bindAddr }}"
+            - "--auth"
+            - "{{ .Values.vibeStation.codeServer.auth }}"
+            - "--app-name"
+            - "{{ .Values.vibeStation.codeServer.appName }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.targetPort }}
+              protocol: TCP
+          env:
+            {{- range $key, $value := .Values.vibeStation.environment }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- if .Values.vibeStation.ssh.enableAuthSock }}
+            - name: SSH_AUTH_SOCK
+              value: {{ .Values.vibeStation.ssh.authSockPath }}
+            {{- end }}
+          {{- if .Values.healthcheck.enabled }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: {{ .Values.healthcheck.initialDelaySeconds }}
+            periodSeconds: {{ .Values.healthcheck.periodSeconds }}
+            timeoutSeconds: {{ .Values.healthcheck.timeoutSeconds }}
+            successThreshold: {{ .Values.healthcheck.successThreshold }}
+            failureThreshold: {{ .Values.healthcheck.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: {{ .Values.healthcheck.initialDelaySeconds }}
+            periodSeconds: {{ .Values.healthcheck.periodSeconds }}
+            timeoutSeconds: {{ .Values.healthcheck.timeoutSeconds }}
+            successThreshold: {{ .Values.healthcheck.successThreshold }}
+            failureThreshold: {{ .Values.healthcheck.failureThreshold }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            {{- if .Values.persistence.nixStore.enabled }}
+            - name: nix-store
+              mountPath: /nix
+            {{- end }}
+            {{- if .Values.persistence.codeServerData.enabled }}
+            - name: code-server-data
+              mountPath: /home/coder/.local/share/code-server
+            {{- end }}
+            {{- if and .Values.vibeStation.docker.enabled (not .Values.vibeStation.docker.useHostDocker) }}
+            {{- if .Values.persistence.dockerImages.enabled }}
+            - name: docker-images
+              mountPath: /var/lib/docker
+            {{- end }}
+            - name: docker-run
+              mountPath: /var/run
+            {{- end }}
+            {{- if and .Values.vibeStation.docker.enabled .Values.vibeStation.docker.useHostDocker }}
+            - name: host-docker-socket
+              mountPath: /var/run/docker.sock
+            {{- end }}
+            {{- if .Values.vibeStation.ssh.enableAuthSock }}
+            - name: ssh-auth-sock
+              mountPath: {{ .Values.vibeStation.ssh.authSockPath }}
+            {{- end }}
+            {{- if or .Values.persistence.appData.enabled .Values.persistence.appData.existingClaim }}
+            - name: app-data
+              mountPath: /app
+            {{- end }}
+      volumes:
+        {{- if .Values.persistence.nixStore.enabled }}
+        - name: nix-store
+          persistentVolumeClaim:
+            claimName: {{ include "vibe-station.fullname" . }}-nix-store
+        {{- end }}
+        {{- if .Values.persistence.codeServerData.enabled }}
+        - name: code-server-data
+          persistentVolumeClaim:
+            claimName: {{ include "vibe-station.fullname" . }}-code-server-data
+        {{- end }}
+        {{- if and .Values.vibeStation.docker.enabled (not .Values.vibeStation.docker.useHostDocker) }}
+        {{- if .Values.persistence.dockerImages.enabled }}
+        - name: docker-images
+          persistentVolumeClaim:
+            claimName: {{ include "vibe-station.fullname" . }}-docker-images
+        {{- end }}
+        - name: docker-run
+          emptyDir:
+            medium: Memory
+        {{- end }}
+        {{- if and .Values.vibeStation.docker.enabled .Values.vibeStation.docker.useHostDocker }}
+        - name: host-docker-socket
+          hostPath:
+            path: {{ .Values.vibeStation.docker.hostDockerSocket }}
+            type: Socket
+        {{- end }}
+        {{- if .Values.vibeStation.ssh.enableAuthSock }}
+        - name: ssh-auth-sock
+          hostPath:
+            path: {{ .Values.vibeStation.ssh.authSockPath }}
+            type: Socket
+        {{- end }}
+        {{- if .Values.persistence.appData.enabled }}
+        - name: app-data
+          persistentVolumeClaim:
+            claimName: {{ include "vibe-station.fullname" . }}-app-data
+        {{- else if .Values.persistence.appData.existingClaim }}
+        - name: app-data
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.appData.existingClaim }}
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

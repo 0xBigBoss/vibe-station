@@ -1,0 +1,20 @@
+apiVersion: v2
+name: vibe-station
+description: A Helm chart for Vibe Station - An agentic developer experience platform
+type: application
+version: 0.1.0
+appVersion: "latest"
+home: https://github.com/0xbigboss/vibe-station
+sources:
+  - https://github.com/0xbigboss/vibe-station
+maintainers:
+  - name: 0xbigboss
+    url: https://github.com/0xbigboss
+keywords:
+  - code-server
+  - development
+  - nix
+  - home-manager
+  - docker
+annotations:
+  category: Development
